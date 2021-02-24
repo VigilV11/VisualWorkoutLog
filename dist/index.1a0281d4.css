@@ -1,0 +1,13 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#map {
+  height: 600px;
+  width: 800px;
+  /* display: inline-block; */
+}
+
+/*# sourceMappingURL=index.1a0281d4.css.map */

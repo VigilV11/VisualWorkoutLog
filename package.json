@@ -1,0 +1,37 @@
+{
+  "name": "visualworkoutlog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel serve ./public/index.html",
+    "build": "parcel build ./public/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VigilV11/VisualWorkoutLog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VigilV11/VisualWorkoutLog/issues"
+  },
+  "homepage": "https://github.com/VigilV11/VisualWorkoutLog#readme",
+  "dependencies": {
+    "core-js": "^3.9.0",
+    "leaflet": "^1.7.1",
+    "regenerator-runtime": "^0.13.7"
+  },
+  "devDependencies": {
+    "@parcel/optimizer-cssnano": "^2.0.0-nightly.609",
+    "@parcel/optimizer-htmlnano": "^2.0.0-nightly.609",
+    "@parcel/packager-css": "^2.0.0-nightly.609",
+    "@parcel/packager-html": "^2.0.0-nightly.609",
+    "@parcel/transformer-css": "^2.0.0-nightly.609",
+    "@parcel/transformer-html": "^2.0.0-nightly.609",
+    "@parcel/transformer-postcss": "^2.0.0-nightly.609",
+    "@parcel/transformer-posthtml": "^2.0.0-nightly.609",
+    "parcel": "^2.0.0-beta.1",
+    "postcss": "^8.2.6"
+  }
+}
