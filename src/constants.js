@@ -1,5 +1,6 @@
-export const mapAPIMapbox =
-  'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWRhbXppb24iLCJhIjoiY2tsamdudDV5MG10bzJwbm10OW94ZTMxMiJ9.X-ud_zEfQeLpyuZMatrEQQ';
+import * as ENV_VARS from '../env.js';
+
+export const mapAPIMapbox = `https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${ENV_VARS.MAPBOX_API_KEY}`;
 
 export const mapAttributionMapbox = {
   attribution:

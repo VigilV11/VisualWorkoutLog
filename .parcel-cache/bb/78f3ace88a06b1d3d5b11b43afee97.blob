@@ -1,0 +1,12 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#map {
+  height: 600px;
+  width: 800px;
+}
+
+/*# sourceMappingURL=index.HASH_REF_e0e414175bd0249a2bb67a221a0281d4.css.map */

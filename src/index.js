@@ -1,14 +1,20 @@
-// import L from 'leaflet';
+import L from 'leaflet';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import {
-  mapAPIMapbox as mapAPI,
-  mapAttributionMapbox as mapAttribution,
-} from './constants.js';
 // import {
-//   mapAPIOpenStreetMap as mapAPI,
-//   mapAttributionOpenStreetMap as mapAttribution,
+//   mapAPIMapbox as mapAPI,
+//   mapAttributionMapbox as mapAttribution,
 // } from './constants.js';
+import {
+  mapAPIOpenStreetMap as mapAPI,
+  mapAttributionOpenStreetMap as mapAttribution,
+} from './constants.js';
+
+import * as ENV_VARS from '../env.js';
+
+//++++++++++++++++  REQUIRED API KEYS ++++++++++++++++\\
+// LOCATIONIQ_API_KEY from https://locationiq.com/ for reverse geocoding
+// MAPBOX_API_KEY in constants.js from https://www.mapbox.com/ for displaying the map
 
 //++++++++++++++++ PROMISIFYING GEOLOCATION API CALL ++++++++++++++++\\
 const getPosition = function () {
@@ -23,12 +29,21 @@ const loadMap = async function () {
   const lat = res.coords.latitude;
   const lng = res.coords.longitude;
 
-  console.log(lat, lng);
   let mapObj = L.map('map').setView([lat, lng], 13); // second parameter is the map zoom level
 
   L.tileLayer(mapAPI, mapAttribution).addTo(mapObj);
 
   return mapObj;
+};
+
+//++++++++++++++++ GET LOCATION DATA ++++++++++++++++\\
+
+const getLocationData = async function (lat, lng) {
+  const res = await fetch(
+    `https://us1.locationiq.com/v1/reverse.php?key=${ENV_VARS.LOCATIONIQ_API_KEY}&format=json&lat=${lat}&lon=${lng}`
+  );
+  const data = await res.json();
+  return data.display_name;
 };
 
 //++++++++++++++++ GET USER CLICK LOCATION ++++++++++++++++\\
@@ -38,12 +53,20 @@ const getMapLocation = async function () {
   myMap.on('click', onMapClick.bind(myMap));
 };
 
-function onMapClick(e) {
-  console.log(e.latlng);
-  console.log(this);
+async function onMapClick(e) {
   const myMap = this;
-  var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(myMap);
-  marker.bindPopup('<b>New location</b><br>how wonderful!').openPopup();
+  const {
+    latlng: { lat, lng },
+  } = e;
+  const location = await getLocationData(lat, lng);
+  let [mainAddress, ...remainingAddress] = location.split(',');
+
+  var marker = L.marker([lat, lng]).addTo(myMap);
+  marker
+    .bindPopup(
+      `<strong>${mainAddress}</strong> <br /> ${remainingAddress.join(', ')}`
+    )
+    .openPopup();
 }
 
 getMapLocation();
