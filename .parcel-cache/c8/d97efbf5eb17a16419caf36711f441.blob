@@ -30,7 +30,7 @@ body {
 }
 
 .leaflet-popup .leaflet-popup-content {
-  font-size: 0.8rem;
+  font-size: 1.5rem;
 }
 
 .leaflet-popup .leaflet-popup-tip {
@@ -44,5 +44,3 @@ body {
 .cycling-popup .leaflet-popup-content-wrapper {
   border-left: 5px solid var(--color-brand--1);
 }
-
-/*# sourceMappingURL=index.1a0281d4.css.map */

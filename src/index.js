@@ -62,8 +62,19 @@ async function onMapClick(e) {
   let [mainAddress, ...remainingAddress] = location.split(',');
 
   var marker = L.marker([lat, lng]).addTo(myMap);
+
+  // Customize popup
+  const popupOptions = {
+    maxWidth: 250,
+    minWidth: 100,
+    autoClose: false,
+    closeOnClick: false,
+    className: 'running-popup',
+  };
+
   marker
-    .bindPopup(
+    .bindPopup(L.popup(popupOptions))
+    .setPopupContent(
       `<strong>${mainAddress}</strong> <br /> ${remainingAddress.join(', ')}`
     )
     .openPopup();

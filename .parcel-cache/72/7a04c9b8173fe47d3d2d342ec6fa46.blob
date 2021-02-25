@@ -3,7 +3,7 @@
   --color-light--1: #ccc;
   --color-light--2: #eee;
   --color-brand--1: rgb(231, 188, 47);
-  --color-brand--2: rgb(164, 231, 167);
+  --color-brand--2: lightgreen;
 }
 
 * {
@@ -30,7 +30,7 @@ body {
 }
 
 .leaflet-popup .leaflet-popup-content {
-  font-size: 0.8rem;
+  font-size: 1.5rem;
 }
 
 .leaflet-popup .leaflet-popup-tip {
@@ -45,4 +45,4 @@ body {
   border-left: 5px solid var(--color-brand--1);
 }
 
-/*# sourceMappingURL=index.1a0281d4.css.map */
+/*# sourceMappingURL=index.HASH_REF_e0e414175bd0249a2bb67a221a0281d4.css.map */

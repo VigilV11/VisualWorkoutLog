@@ -494,6 +494,7 @@ async function onMapClick(e) {
   const location = await getLocationData(lat, lng);
   let [mainAddress, ...remainingAddress] = location.split(',');
   var marker = _leafletDefault.default.marker([lat, lng]).addTo(myMap);
+  marker.bindPopup(`<strong>${mainAddress}</strong> <br /> ${remainingAddress.join(', ')}`).openPopup();
   // Customize popup
   const popupOptions = {
     maxWidth: 250,
@@ -502,7 +503,7 @@ async function onMapClick(e) {
     closeOnClick: false,
     className: 'running-popup'
   };
-  marker.bindPopup(_leafletDefault.default.popup(popupOptions)).setPopupContent(`<strong>${mainAddress}</strong> <br /> ${remainingAddress.join(', ')}`).openPopup();
+  marker.bindPopup().setPopupContent(`<strong>${mainAddress}</strong> <br /> ${remainingAddress.join(', ')}`).openPopup();
 }
 getMapLocation();
 
@@ -23734,4 +23735,4 @@ var define;
 
 },{}]},["7sNyx","5rkFb"], "5rkFb", "parcelRequire03eb")
 
-//# sourceMappingURL=index.3fafb3e2.js.map
+//# sourceMappingURL=index.HASH_REF_0fa2489aa94c8731ee2aee9f3fafb3e2.js.map
