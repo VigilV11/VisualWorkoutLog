@@ -479,6 +479,7 @@ const workoutDistance = document.querySelector('.form-distance');
 const workoutDuration = document.querySelector('.form-duration');
 const workoutCadence = document.querySelector('.form-cadence');
 const labelCadence = document.querySelector('.label-cadence');
+const formCancelButton = document.querySelector('.cancel-button');
 workoutType.value = 'running';
 workoutDistance.value = 2;
 workoutDuration.value = 10;
@@ -534,6 +535,10 @@ workoutType.addEventListener('change', e => {
     labelCadence.innerHTML = 'Cadence &nbsp;&nbsp;&nbsp;';
     workoutCadence.attributes.placeholder.value = 'step/min';
   }
+});
+// Hide the form if cancel button is pressed
+formCancelButton.addEventListener('click', () => {
+  workoutForm.classList.add('hidden');
 });
 // ++++++++++++++++ PROMISIFYING GEOLOCATION API CALL ++++++++++++++++\\
 const getPosition = function () {

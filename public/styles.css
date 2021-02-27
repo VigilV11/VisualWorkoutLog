@@ -41,12 +41,18 @@ label {
   display: none;
 }
 
-.submit-button {
+.form-buttons {
+  display: block;
+  width: 140px;
+  margin: 0 auto;
+}
+
+.submit-button,
+.cancel-button {
   /* display: none; */
   width: 60px;
   height: 24px;
-  display: block;
-  margin: auto;
+  margin-left: 5px;
   margin-top: 7px;
   border: 1px solid #333;
   border-radius: 3px;
@@ -73,7 +79,7 @@ label {
 .workout-form-outbox {
   line-height: 2rem;
   margin: 0 auto;
-  padding: 3%;
+  padding: 3% 3% 2% 3%;
   /* display: block; */
   width: 380px;
   background-color: #555;

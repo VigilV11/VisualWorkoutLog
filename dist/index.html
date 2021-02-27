@@ -21,8 +21,8 @@
   </head>
   <body>
     <section id="workout-list">
-      <div>
-        <h2>Visual Workout Log</h2>
+      <h2>Visual Workout Log</h2>
+      <div class="all-workouts-list">
         <div class="workout-form-outbox hidden">
           <div class="workout-form-inbox">
             <form action="">
@@ -43,7 +43,10 @@
                 <label class="label-cadence" for="cadence">Cadence &nbsp;&nbsp;&nbsp;</label>
                 <input class="form-cadence" type="text" name="cadence" id="cadence" placeholder="step/min">
               </div>
-              <button class="submit-button" type="submit">Submit</button>
+              <div class="form-buttons">
+                <button class="submit-button" type="submit">Submit</button>
+                <button class="cancel-button" type="button">Cancel</button>
+              </div>
             </form>
           </div>
         </div>

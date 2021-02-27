@@ -34,6 +34,7 @@ const workoutDuration = document.querySelector('.form-duration');
 const workoutCadence = document.querySelector('.form-cadence');
 
 const labelCadence = document.querySelector('.label-cadence');
+const formCancelButton = document.querySelector('.cancel-button');
 
 workoutType.value = 'running';
 workoutDistance.value = 2;
@@ -126,6 +127,10 @@ workoutType.addEventListener('change', e => {
   }
 });
 
+// Hide the form if cancel button is pressed
+formCancelButton.addEventListener('click', () => {
+  workoutForm.classList.add('hidden');
+});
 //++++++++++++++++ PROMISIFYING GEOLOCATION API CALL ++++++++++++++++\\
 const getPosition = function () {
   return new Promise((resolve, reject) =>
