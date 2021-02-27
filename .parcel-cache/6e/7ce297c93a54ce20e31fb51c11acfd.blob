@@ -479,10 +479,6 @@ const workoutDistance = document.querySelector('.form-distance');
 const workoutDuration = document.querySelector('.form-duration');
 const workoutCadence = document.querySelector('.form-cadence');
 const labelCadence = document.querySelector('.label-cadence');
-workoutType.value = 'running';
-workoutDistance.value = 2;
-workoutDuration.value = 10;
-workoutCadence.value = 60;
 // ++++++++++++++++ LOAD FROM LOCAL STORAGE ++++++++++++++++\\
 if (localStorage.allWorkouts) {
   allWorkouts = JSON.parse(localStorage.getItem('allWorkouts'));
@@ -494,7 +490,6 @@ if (localStorage.allWorkouts) {
 // Event listener to monitor form submission (Enter key)
 submitWorkoutForm.addEventListener('submit', e => {
   e.preventDefault();
-  // Set values in development
   // If a number is not entered in the input fields the code will issue an alert and not proceed
   if (!Number.isFinite(+workoutDistance.value) || workoutDistance.value === '' || !Number.isFinite(+workoutDuration.value) || workoutDuration.value === '' || !Number.isFinite(+workoutCadence.value) || workoutCadence.value === '') {
     alert('Enter a numeric value!');
@@ -23813,4 +23808,4 @@ exports.default = WorkoutData;
 
 },{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}]},["7sNyx","5rkFb"], "5rkFb", "parcelRequire03eb")
 
-//# sourceMappingURL=index.3fafb3e2.js.map
+//# sourceMappingURL=index.HASH_REF_0fa2489aa94c8731ee2aee9f3fafb3e2.js.map

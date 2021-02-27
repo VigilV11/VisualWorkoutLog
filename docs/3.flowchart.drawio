@@ -1,6 +1,6 @@
-<mxfile host="65bd71144e" modified="2021-02-27T06:27:17.455Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.53.2 Chrome/87.0.4280.141 Electron/11.2.1 Safari/537.36" etag="CqmSQKhVSKqrkuCuAIEG" version="14.2.4" type="embed">
+<mxfile host="65bd71144e" modified="2021-02-27T09:38:29.951Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.53.2 Chrome/87.0.4280.141 Electron/11.2.1 Safari/537.36" etag="sYizAk7z87eM87leqtkO" version="14.2.4" type="embed">
     <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-        <mxGraphModel dx="525" dy="490" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="595" dy="319" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="WIyWlLk6GJQsqaUBKTNV-0"/>
                 <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0"/>
@@ -94,7 +94,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="czPUw6Pohk6DoG0pXorq-8" value="Open a popup&lt;br&gt;form for workout&lt;br&gt;details" style="html=1;dashed=0;whitespace=wrap;fontColor=#000000;fillColor=#FFFFFF;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+                <mxCell id="czPUw6Pohk6DoG0pXorq-8" value="Open a popup&lt;br&gt;form for workout&lt;br&gt;details" style="html=1;dashed=0;whitespace=wrap;fontColor=#000000;fillColor=#CCFFE6;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
                     <mxGeometry x="320" y="445" width="100" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="czPUw6Pohk6DoG0pXorq-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="czPUw6Pohk6DoG0pXorq-9" target="czPUw6Pohk6DoG0pXorq-26" edge="1">
@@ -136,7 +136,7 @@
                 <mxCell id="czPUw6Pohk6DoG0pXorq-22" value="Render data to&lt;br&gt;map" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#FFFFFF;fontColor=#000000;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
                     <mxGeometry x="320" y="280" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="czPUw6Pohk6DoG0pXorq-25" value="Add data to pin" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#FFFFFF;fontColor=#000000;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+                <mxCell id="czPUw6Pohk6DoG0pXorq-25" value="Add data to pin" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#CCFFE6;fontColor=#000000;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
                     <mxGeometry x="470" y="400" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="czPUw6Pohk6DoG0pXorq-26" value="Add data to list" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#FFFFFF;fontColor=#000000;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
