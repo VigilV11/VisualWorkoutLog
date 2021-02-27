@@ -19,3 +19,5 @@ export const mapAttributionOpenStreetMap = {
   attribution:
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 };
+
+export const locationDataAPI = `https://us1.locationiq.com/v1/reverse.php?key=${ENV_VARS.LOCATIONIQ_API_KEY}&format=json`;

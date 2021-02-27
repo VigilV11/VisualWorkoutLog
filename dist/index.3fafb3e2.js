@@ -459,7 +459,8 @@ var _leafletDefault = _parcelHelpers.interopDefault(_leaflet);
 require('core-js/stable');
 require('regenerator-runtime/runtime');
 var _constantsJs = require('./constants.js');
-var _envJs = require('../env.js');
+var _constants = require('./constants');
+require('../env.js');
 // ++++++++++++++++  REQUIRED API KEYS ++++++++++++++++\\
 // LOCATIONIQ_API_KEY from https://locationiq.com/ for reverse geocoding
 // MAPBOX_API_KEY in constants.js from https://www.mapbox.com/ for displaying the map
@@ -470,8 +471,7 @@ const getPosition = function () {
 // ++++++++++++++++ DISPLAY MAP TO CURRENT POSITION ++++++++++++++++\\
 const loadMap = async function () {
   const res = await getPosition();
-  const lat = res.coords.latitude;
-  const lng = res.coords.longitude;
+  const {latitude: lat, longitude: lng} = res.coords;
   let mapObj = _leafletDefault.default.map('map').setView([lat, lng], 13);
   // second parameter is the map zoom level
   _leafletDefault.default.tileLayer(_constantsJs.mapAPIOpenStreetMap, _constantsJs.mapAttributionOpenStreetMap).addTo(mapObj);
@@ -479,12 +479,12 @@ const loadMap = async function () {
 };
 // ++++++++++++++++ GET LOCATION DATA ++++++++++++++++\\
 const getLocationData = async function (lat, lng) {
-  const res = await fetch(`https://us1.locationiq.com/v1/reverse.php?key=${_envJs.LOCATIONIQ_API_KEY}&format=json&lat=${lat}&lon=${lng}`);
+  const res = await fetch(`${_constants.locationDataAPI}&lat=${lat}&lon=${lng}`);
   const data = await res.json();
   return data.display_name;
 };
 // ++++++++++++++++ GET USER CLICK LOCATION ++++++++++++++++\\
-const getMapLocation = async function () {
+const main = async function () {
   const myMap = await loadMap();
   myMap.on('click', onMapClick.bind(myMap));
 };
@@ -492,9 +492,12 @@ async function onMapClick(e) {
   const myMap = this;
   const {latlng: {lat, lng}} = e;
   const location = await getLocationData(lat, lng);
+  // Get location data by reverse geocoding
   let [mainAddress, ...remainingAddress] = location.split(',');
+  // Display first part of address as heading (in bold)
   var marker = _leafletDefault.default.marker([lat, lng]).addTo(myMap);
-  // Customize popup
+  // Add marker to map
+  // Customize popup modal
   const popupOptions = {
     maxWidth: 250,
     minWidth: 100,
@@ -504,9 +507,9 @@ async function onMapClick(e) {
   };
   marker.bindPopup(_leafletDefault.default.popup(popupOptions)).setPopupContent(`<strong>${mainAddress}</strong> <br /> ${remainingAddress.join(', ')}`).openPopup();
 }
-getMapLocation();
+main();
 
-},{"core-js/stable":"1PFvP","regenerator-runtime/runtime":"62Qib","./constants.js":"5vBc0","leaflet":"QyATM","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","../env.js":"7Iq7v"}],"1PFvP":[function(require,module,exports) {
+},{"core-js/stable":"1PFvP","regenerator-runtime/runtime":"62Qib","./constants.js":"5vBc0","leaflet":"QyATM","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","../env.js":"7Iq7v","./constants":"5vBc0"}],"1PFvP":[function(require,module,exports) {
 require('../es');
 require('../web');
 var path = require('../internals/path');
@@ -12370,6 +12373,9 @@ _parcelHelpers.export(exports, "mapAPIOpenStreetMap", function () {
 _parcelHelpers.export(exports, "mapAttributionOpenStreetMap", function () {
   return mapAttributionOpenStreetMap;
 });
+_parcelHelpers.export(exports, "locationDataAPI", function () {
+  return locationDataAPI;
+});
 var _envJs = require('../env.js');
 const mapAPIMapbox = `https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${_envJs.MAPBOX_API_KEY}`;
 const mapAttributionMapbox = {
@@ -12384,6 +12390,7 @@ const mapAPIOpenStreetMap = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.p
 const mapAttributionOpenStreetMap = {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 };
+const locationDataAPI = `https://us1.locationiq.com/v1/reverse.php?key=${_envJs.LOCATIONIQ_API_KEY}&format=json`;
 
 },{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","../env.js":"7Iq7v"}],"5gA8y":[function(require,module,exports) {
 "use strict";

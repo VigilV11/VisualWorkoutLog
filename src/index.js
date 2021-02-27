@@ -10,6 +10,8 @@ import {
   mapAttributionOpenStreetMap as mapAttribution,
 } from './constants.js';
 
+import { locationDataAPI } from './constants';
+
 import * as ENV_VARS from '../env.js';
 
 //++++++++++++++++  REQUIRED API KEYS ++++++++++++++++\\
@@ -26,8 +28,8 @@ const getPosition = function () {
 //++++++++++++++++ DISPLAY MAP TO CURRENT POSITION ++++++++++++++++\\
 const loadMap = async function () {
   const res = await getPosition();
-  const lat = res.coords.latitude;
-  const lng = res.coords.longitude;
+
+  const { latitude: lat, longitude: lng } = res.coords;
 
   let mapObj = L.map('map').setView([lat, lng], 13); // second parameter is the map zoom level
 
@@ -39,18 +41,16 @@ const loadMap = async function () {
 //++++++++++++++++ GET LOCATION DATA ++++++++++++++++\\
 
 const getLocationData = async function (lat, lng) {
-  const res = await fetch(
-    `https://us1.locationiq.com/v1/reverse.php?key=${ENV_VARS.LOCATIONIQ_API_KEY}&format=json&lat=${lat}&lon=${lng}`
-  );
+  const res = await fetch(`${locationDataAPI}&lat=${lat}&lon=${lng}`);
   const data = await res.json();
   return data.display_name;
 };
 
 //++++++++++++++++ GET USER CLICK LOCATION ++++++++++++++++\\
 
-const getMapLocation = async function () {
+const main = async function () {
   const myMap = await loadMap();
-  myMap.on('click', onMapClick.bind(myMap));
+  myMap.on('click', onMapClick.bind(myMap)); // Add click event listener to map
 };
 
 async function onMapClick(e) {
@@ -58,12 +58,12 @@ async function onMapClick(e) {
   const {
     latlng: { lat, lng },
   } = e;
-  const location = await getLocationData(lat, lng);
-  let [mainAddress, ...remainingAddress] = location.split(',');
+  const location = await getLocationData(lat, lng); // Get location data by reverse geocoding
+  let [mainAddress, ...remainingAddress] = location.split(','); // Display first part of address as heading (in bold)
 
-  var marker = L.marker([lat, lng]).addTo(myMap);
+  var marker = L.marker([lat, lng]).addTo(myMap); // Add marker to map
 
-  // Customize popup
+  // Customize popup modal
   const popupOptions = {
     maxWidth: 250,
     minWidth: 100,
@@ -80,4 +80,4 @@ async function onMapClick(e) {
     .openPopup();
 }
 
-getMapLocation();
+main();
