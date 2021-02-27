@@ -27,7 +27,7 @@ select {
   /* margin-right: 15px; */
 }
 input {
-  /* padding: 3px; */
+  padding: 3px;
 }
 
 label {
@@ -40,6 +40,23 @@ label {
 .hidden {
   display: none;
 }
+
+.submit-button {
+  /* display: none; */
+  width: 60px;
+  height: 24px;
+  display: block;
+  margin: auto;
+  margin-top: 7px;
+  border: 1px solid #333;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #ccc;
+}
+
 /* WORKOUT LIST */
 #workout-list {
   width: 400px;

@@ -11,12 +11,99 @@ import {
 } from './constants.js';
 
 import { locationDataAPI } from './constants';
-
-import * as ENV_VARS from '../env.js';
+import WorkoutData from './WorkoutData';
 
 //++++++++++++++++  REQUIRED API KEYS ++++++++++++++++\\
-// LOCATIONIQ_API_KEY from https://locationiq.com/ for reverse geocoding
+// LOCATIONIQ_API_KEY in constants.js from https://locationiq.com/ for reverse geocoding
 // MAPBOX_API_KEY in constants.js from https://www.mapbox.com/ for displaying the map
+
+//++++++++++++++++  GLOBAL VARIABLES ++++++++++++++++\\
+let marker;
+let myMap;
+let mapClickLat;
+let mapClickLng;
+
+//++++++++++++++++ SELECTING DOM NODES ++++++++++++++++\\
+const workoutForm = document.querySelector('.workout-form-outbox');
+const submitWorkoutForm = document.querySelector('form');
+
+const workoutType = document.querySelector('.form-type');
+const workoutDistance = document.querySelector('.form-distance');
+const workoutDuration = document.querySelector('.form-duration');
+const workoutCadence = document.querySelector('.form-cadence');
+
+const labelCadence = document.querySelector('.label-cadence');
+
+//++++++++++++++++ ADD EVENT LISTENERS ++++++++++++++++\\
+// Event listener to monitor form submission (Enter key)
+submitWorkoutForm.addEventListener('submit', e => {
+  e.preventDefault();
+
+  // If a number is not entered in the input fields the code will issue an alert and not proceed
+  if (
+    !Number.isFinite(+workoutDistance.value) ||
+    workoutDistance.value === '' ||
+    !Number.isFinite(+workoutDuration.value) ||
+    workoutDuration.value === '' ||
+    !Number.isFinite(+workoutCadence.value) ||
+    workoutCadence.value === ''
+  ) {
+    alert('Enter a numeric value!');
+    return;
+  }
+
+  const workoutData = new WorkoutData(
+    workoutType.value,
+    workoutDistance.value,
+    workoutDuration.value,
+    workoutCadence.value
+  );
+  console.log(workoutData);
+
+  // Set form to default values:
+  workoutType.value = 'running';
+  workoutDistance.value = '';
+  workoutDuration.value = '';
+  workoutCadence.value = '';
+
+  // Hide workout form slowly
+  setTimeout(() => workoutForm.classList.add('hidden'), 200);
+
+  // After the form data is entered display the tooltip
+  marker = L.marker([mapClickLat, mapClickLng]).addTo(myMap); // Add marker to map
+
+  // Customize tool tip
+  const popupOptions = {
+    maxWidth: 250,
+    minWidth: 100,
+    autoClose: false,
+    closeOnClick: false,
+    className:
+      workoutData.type === 'running' ? 'running-popup' : 'cycling-popup',
+  };
+
+  marker
+    .bindPopup(L.popup(popupOptions))
+    .setPopupContent(
+      `<strong>${
+        workoutData.type === 'running' ? '🏃‍♂️ Running' : '🚴‍♂️ Cycling'
+      }</strong> <br /> ${workoutData.distance} km, ${
+        workoutData.duration
+      } mins, ${workoutData.cadence} steps/min`
+    )
+    .openPopup();
+});
+
+// Event listener to change field values for running and cycling
+workoutType.addEventListener('change', e => {
+  if (e.target.value === 'cycling') {
+    labelCadence.innerHTML = 'Elevation &nbsp;';
+    workoutCadence.attributes.placeholder.value = 'm/min';
+  } else {
+    labelCadence.innerHTML = 'Cadence &nbsp;&nbsp;&nbsp;';
+    workoutCadence.attributes.placeholder.value = 'step/min';
+  }
+});
 
 //++++++++++++++++ PROMISIFYING GEOLOCATION API CALL ++++++++++++++++\\
 const getPosition = function () {
@@ -49,35 +136,19 @@ const getLocationData = async function (lat, lng) {
 //++++++++++++++++ GET USER CLICK LOCATION ++++++++++++++++\\
 
 const main = async function () {
-  const myMap = await loadMap();
-  myMap.on('click', onMapClick.bind(myMap)); // Add click event listener to map
+  myMap = await loadMap();
+  myMap.on('click', onMapClick); // Add click event listener to map
 };
 
 async function onMapClick(e) {
-  const myMap = this;
-  const {
-    latlng: { lat, lng },
-  } = e;
-  const location = await getLocationData(lat, lng); // Get location data by reverse geocoding
-  let [mainAddress, ...remainingAddress] = location.split(','); // Display first part of address as heading (in bold)
+  ({
+    latlng: { lat: mapClickLat, lng: mapClickLng },
+  } = e);
+  // const location = await getLocationData(lat, lng); // Get location data by reverse geocoding
+  // let [mainAddress, ...remainingAddress] = location.split(','); // Display first part of address as heading (in bold)
 
-  var marker = L.marker([lat, lng]).addTo(myMap); // Add marker to map
-
-  // Customize popup modal
-  const popupOptions = {
-    maxWidth: 250,
-    minWidth: 100,
-    autoClose: false,
-    closeOnClick: false,
-    className: 'running-popup',
-  };
-
-  marker
-    .bindPopup(L.popup(popupOptions))
-    .setPopupContent(
-      `<strong>${mainAddress}</strong> <br /> ${remainingAddress.join(', ')}`
-    )
-    .openPopup();
+  // Show workout form
+  workoutForm.classList.remove('hidden');
 }
 
 main();
