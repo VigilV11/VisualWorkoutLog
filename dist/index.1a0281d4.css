@@ -1,5 +1,6 @@
 :root {
   --color-dark--1: #333;
+  --color-dark--2: #555;
   --color-light--1: #ccc;
   --color-light--2: #eee;
   --color-brand--1: rgb(231, 188, 47);
@@ -13,8 +14,9 @@
 }
 
 body {
-  background-color: var(--color-light--1);
+  background-color: var(--color-dark--2);
   display: flex;
+  margin: auto;
 }
 
 /* COMMON */
@@ -68,6 +70,7 @@ label {
   width: 400px;
   height: 600px;
   background-color: #333;
+  overflow-y: auto;
 }
 
 #workout-list h2 {
@@ -122,6 +125,42 @@ label {
 
 .cycling-popup .leaflet-popup-content-wrapper {
   border-left: 5px solid var(--color-brand--1);
+}
+
+/* WORKOUT LIST ITEMS */
+.workout-item-outbox {
+  line-height: 1.4rem;
+  margin: 5% auto;
+  padding: 3% 3% 2% 3%;
+  /* display: block; */
+  width: 360px;
+  background-color: #555;
+  border-radius: 5px;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+  /* text-align: center; */
+  /* color: #eee; */
+}
+.workout-item-inbox {
+  display: block;
+  margin: 0 auto;
+  width: 300px;
+  /* justify-content: center; */
+}
+
+.workout-item-inbox h4 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: rgb(231, 188, 47);
+}
+
+.workout-item-inbox .workout-info {
+  margin-bottom: 8px;
+  color: rgb(228, 203, 121);
+}
+
+.workout-item-inbox .date-place {
+  font-style: oblique;
+  color: rgb(241, 223, 163);
 }
 
 /*# sourceMappingURL=index.1a0281d4.css.map */

@@ -11,7 +11,11 @@ import {
 } from './constants.js';
 
 import { locationDataAPI } from './constants';
+
+import { HTML_WORKOUT_FORM, HTML_WORKOUT_ITEM } from './constants';
+
 import WorkoutData from './WorkoutData';
+import { insertNewWorkoutItem } from './insertNewWorkoutItem';
 
 //++++++++++++++++  REQUIRED API KEYS ++++++++++++++++\\
 // LOCATIONIQ_API_KEY in constants.js from https://locationiq.com/ for reverse geocoding
@@ -23,37 +27,32 @@ let myMap;
 let mapClickLat;
 let mapClickLng;
 let allWorkouts = [];
+let mainLocation;
 
 //++++++++++++++++ SELECTING DOM NODES ++++++++++++++++\\
-const workoutForm = document.querySelector('.workout-form-outbox');
-const submitWorkoutForm = document.querySelector('form');
-
-const workoutType = document.querySelector('.form-type');
-const workoutDistance = document.querySelector('.form-distance');
-const workoutDuration = document.querySelector('.form-duration');
-const workoutCadence = document.querySelector('.form-cadence');
-
-const labelCadence = document.querySelector('.label-cadence');
-const formCancelButton = document.querySelector('.cancel-button');
-
-workoutType.value = 'running';
-workoutDistance.value = 2;
-workoutDuration.value = 10;
-workoutCadence.value = 60;
-
+const allWorkoutsList = document.querySelector('.all-workouts-list');
 //++++++++++++++++ LOAD FROM LOCAL STORAGE ++++++++++++++++\\
 if (localStorage.allWorkouts) {
   allWorkouts = JSON.parse(localStorage.getItem('allWorkouts'));
 
-  allWorkouts.forEach(task => {
+  allWorkouts.forEach((task) => {
     console.log(task);
   });
 }
 
 //++++++++++++++++ ADD EVENT LISTENERS ++++++++++++++++\\
 // Event listener to monitor form submission (Enter key)
-submitWorkoutForm.addEventListener('submit', e => {
+allWorkoutsList.addEventListener('submit', (e) => {
+  // If the event was not triggered by the form element, return immediately
+  if (e.target.nodeName !== 'FORM') return;
+
   e.preventDefault();
+
+  const workoutType = document.querySelector('.form-type');
+  const workoutDistance = document.querySelector('.form-distance');
+  const workoutDuration = document.querySelector('.form-duration');
+  const workoutCadence = document.querySelector('.form-cadence'); // or elevation
+  const workoutForm = document.querySelector('.workout-form-outbox');
 
   // Set values in development
 
@@ -70,11 +69,15 @@ submitWorkoutForm.addEventListener('submit', e => {
     return;
   }
 
+  console.log(workoutCadence.value);
+
   const workoutData = new WorkoutData(
     workoutType.value,
     workoutDistance.value,
     workoutDuration.value,
-    workoutCadence.value
+    workoutCadence.value,
+    new Date().toLocaleString(),
+    mainLocation
   );
   console.log(workoutData);
 
@@ -88,8 +91,12 @@ submitWorkoutForm.addEventListener('submit', e => {
   allWorkouts.push(workoutData);
   localStorage.setItem('allWorkouts', JSON.stringify(allWorkouts));
 
+  insertNewWorkoutItem(workoutData);
+
   // Hide workout form slowly
-  setTimeout(() => workoutForm.classList.add('hidden'), 200);
+  // setTimeout(() => workoutForm.classList.add('hidden'), 200);
+
+  workoutForm.remove();
 
   // After the form data is entered display the tooltip
   marker = L.marker([mapClickLat, mapClickLng]).addTo(myMap); // Add marker to map
@@ -111,13 +118,20 @@ submitWorkoutForm.addEventListener('submit', e => {
         workoutData.type === 'running' ? '🏃‍♂️ Running' : '🚴‍♂️ Cycling'
       }</strong> <br /> ${workoutData.distance} km, ${
         workoutData.duration
-      } mins, ${workoutData.cadence} steps/min`
+      } mins, ${workoutData.cadenceOrElevation} steps/min`
     )
     .openPopup();
 });
 
 // Event listener to change field values for running and cycling
-workoutType.addEventListener('change', e => {
+// workoutType.addEventListener('change', (e) => {
+allWorkoutsList.addEventListener('change', (e) => {
+  // If its not form type, return immediately
+  if (!e.target.classList.contains('form-type')) return;
+
+  const workoutCadence = document.querySelector('.form-cadence');
+  const labelCadence = document.querySelector('.label-cadence');
+
   if (e.target.value === 'cycling') {
     labelCadence.innerHTML = 'Elevation &nbsp;';
     workoutCadence.attributes.placeholder.value = 'm/min';
@@ -128,8 +142,12 @@ workoutType.addEventListener('change', e => {
 });
 
 // Hide the form if cancel button is pressed
-formCancelButton.addEventListener('click', () => {
-  workoutForm.classList.add('hidden');
+// formCancelButton.addEventListener('click', () => {
+allWorkoutsList.addEventListener('click', (e) => {
+  // If it is not the cancel button, return immediately
+  if (!e.target.classList.contains('cancel-button')) return;
+  const workoutForm = document.querySelector('.workout-form-outbox');
+  workoutForm.remove();
 });
 //++++++++++++++++ PROMISIFYING GEOLOCATION API CALL ++++++++++++++++\\
 const getPosition = function () {
@@ -170,11 +188,16 @@ async function onMapClick(e) {
   ({
     latlng: { lat: mapClickLat, lng: mapClickLng },
   } = e);
-  // const location = await getLocationData(lat, lng); // Get location data by reverse geocoding
-  // let [mainAddress, ...remainingAddress] = location.split(','); // Display first part of address as heading (in bold)
+
+  // Uncomment if you want location information
+  // const location = await getLocationData(mapClickLat, mapClickLng); // Get location data by reverse geocoding
+  // mainLocation = location.split(',').slice(0, 2).join(',');
 
   // Show workout form
-  workoutForm.classList.remove('hidden');
+  const workoutForm = document.querySelector('.workout-form-outbox');
+
+  if (!workoutForm?.classList.contains('workout-form-outbox'))
+    allWorkoutsList.insertAdjacentHTML('afterbegin', HTML_WORKOUT_FORM);
 }
 
 main();
