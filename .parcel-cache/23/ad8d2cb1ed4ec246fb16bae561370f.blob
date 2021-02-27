@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="6e91024525be3b3fb7e39b35734ba622">
+    <link rel="stylesheet" href="b81831c88c0ad781cb91a67f00b739a4" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="">
+
+    <!-- <script
+      defer
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script> -->
+
+    <script defer="" src="7d02a2096947585d8de4ed697a690c49"></script>
+
+    <title>Visual Workout Log</title>
+  </head>
+  <body>
+    <section id="workout-list">
+      <div>
+        <h2>Visual Workout Log</h2>
+        <div class="workout-form-outbox">
+          <div class="workout-form-inbox">
+            <div class="workout-form-line">
+              <label for="type">Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+              <select name="type" id="type">
+                <option value="running" selected="">Running</option>
+                <option value="cycling">Cycling</option></select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+              <label for="distance">Distance &nbsp;&nbsp;&nbsp;</label>
+              <input type="text" name="distance" id="distance" placeholder="km">
+            </div>
+
+            <div class="workout-form-line">
+              <label for="duration">Duration &nbsp;&nbsp;</label>
+              <input type="text" name="duration" id="duration" placeholder="min">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+              <label for="cadence">Cadence &nbsp;&nbsp;&nbsp;</label>
+              <input type="text" name="cadence" id="cadence" placeholder="step/min">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- <section id="map"></section> -->
+  </body>
+</html>
