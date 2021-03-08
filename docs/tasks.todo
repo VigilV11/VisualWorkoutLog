@@ -1,0 +1,7 @@
+[x] Attach pins to map when loading from localStorage
+[x] Remove location information from list item if location data is not present
+
+[] Refactor code and add comments
+[] Center viewing area in viewport
+[] Highlight and pan to list item when clicked on map pin
+[] Highlight and pan to map when clicked on list item

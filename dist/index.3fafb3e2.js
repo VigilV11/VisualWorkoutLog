@@ -463,24 +463,27 @@ var _constants = require('./constants');
 var _WorkoutData = require('./WorkoutData');
 var _WorkoutDataDefault = _parcelHelpers.interopDefault(_WorkoutData);
 var _insertNewWorkoutItem = require('./insertNewWorkoutItem');
+var _insertWorkoutPinJs = require('./insertWorkoutPin.js');
 // ++++++++++++++++  REQUIRED API KEYS ++++++++++++++++\\
 // LOCATIONIQ_API_KEY in constants.js from https://locationiq.com/ for reverse geocoding
 // MAPBOX_API_KEY in constants.js from https://www.mapbox.com/ for displaying the map
 // ++++++++++++++++  GLOBAL VARIABLES ++++++++++++++++\\
 let marker;
 let myMap;
-let mapClickLat;
-let mapClickLng;
 let allWorkouts = [];
 let mainLocation;
+let currentLatLng;
 // ++++++++++++++++ SELECTING DOM NODES ++++++++++++++++\\
 const allWorkoutsList = document.querySelector('.all-workouts-list');
 // ++++++++++++++++ LOAD FROM LOCAL STORAGE ++++++++++++++++\\
-if (localStorage.allWorkouts) {
-  allWorkouts = JSON.parse(localStorage.getItem('allWorkouts'));
-  allWorkouts.forEach(task => {
-    console.log(task);
-  });
+function loadStoredData() {
+  if (localStorage.allWorkouts) {
+    allWorkouts = JSON.parse(localStorage.getItem('allWorkouts'));
+    allWorkouts.forEach(task => {
+      _insertNewWorkoutItem.insertNewWorkoutItem(task);
+      _insertWorkoutPinJs.insertWorkoutPin(myMap, task);
+    });
+  }
 }
 // ++++++++++++++++ ADD EVENT LISTENERS ++++++++++++++++\\
 // Event listener to monitor form submission (Enter key)
@@ -500,9 +503,7 @@ allWorkoutsList.addEventListener('submit', e => {
     alert('Enter a numeric value!');
     return;
   }
-  console.log(workoutCadence.value);
-  const workoutData = new _WorkoutDataDefault.default(workoutType.value, workoutDistance.value, workoutDuration.value, workoutCadence.value, new Date().toLocaleString(), mainLocation);
-  console.log(workoutData);
+  const workoutData = new _WorkoutDataDefault.default(workoutType.value, workoutDistance.value, workoutDuration.value, workoutCadence.value, new Date().toLocaleString(), mainLocation, currentLatLng);
   // Set form to default values:
   workoutType.value = 'running';
   workoutDistance.value = '';
@@ -516,7 +517,7 @@ allWorkoutsList.addEventListener('submit', e => {
   // setTimeout(() => workoutForm.classList.add('hidden'), 200);
   workoutForm.remove();
   // After the form data is entered display the tooltip
-  marker = _leafletDefault.default.marker([mapClickLat, mapClickLng]).addTo(myMap);
+  marker = _leafletDefault.default.marker([currentLatLng.lat, currentLatLng.lng]).addTo(myMap);
   // Add marker to map
   // Customize tool tip
   const popupOptions = {
@@ -559,6 +560,10 @@ const getPosition = function () {
 const loadMap = async function () {
   const res = await getPosition();
   const {latitude: lat, longitude: lng} = res.coords;
+  currentLatLng = {
+    lat,
+    lng
+  };
   let mapObj = _leafletDefault.default.map('map').setView([lat, lng], 13);
   // second parameter is the map zoom level
   _leafletDefault.default.tileLayer(_constantsJs.mapAPIOpenStreetMap, _constantsJs.mapAttributionOpenStreetMap).addTo(mapObj);
@@ -573,12 +578,20 @@ const getLocationData = async function (lat, lng) {
 // ++++++++++++++++ GET USER CLICK LOCATION ++++++++++++++++\\
 const main = async function () {
   myMap = await loadMap();
+  loadStoredData();
   myMap.on('click', onMapClick);
 };
 async function onMapClick(e) {
-  ({latlng: {lat: mapClickLat, lng: mapClickLng}} = e);
-  // Uncomment if you want location information
-  // const location = await getLocationData(mapClickLat, mapClickLng); // Get location data by reverse geocoding
+  // ({
+  // latlng: { lat, lng },
+  // } = e);
+  const {latlng: {lat, lng}} = e;
+  currentLatLng = {
+    lat,
+    lng
+  };
+  // // Uncomment if you want location information
+  // const location = await getLocationData(lat, lng); // Get location data by reverse geocoding
   // mainLocation = location.split(',').slice(0, 2).join(',');
   // Show workout form
   const workoutForm = document.querySelector('.workout-form-outbox');
@@ -586,7 +599,7 @@ async function onMapClick(e) {
 }
 main();
 
-},{"leaflet":"QyATM","core-js/stable":"1PFvP","regenerator-runtime/runtime":"62Qib","./constants.js":"5vBc0","./constants":"5vBc0","./WorkoutData":"7rZ4t","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./insertNewWorkoutItem":"39qoD"}],"QyATM":[function(require,module,exports) {
+},{"leaflet":"QyATM","core-js/stable":"1PFvP","regenerator-runtime/runtime":"62Qib","./constants.js":"5vBc0","./constants":"5vBc0","./WorkoutData":"7rZ4t","./insertNewWorkoutItem":"39qoD","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./insertWorkoutPin.js":"54Bwm"}],"QyATM":[function(require,module,exports) {
 var define;
 /*@preserve
 * Leaflet 1.7.1, a JS library for interactive maps. http://leafletjs.com
@@ -23928,13 +23941,14 @@ exports.export = function (dest, destName, get) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 class WorkoutData {
-  constructor(type, distance, duration, cadenceOrElevation, dateTime, location = null) {
+  constructor(type, distance, duration, cadenceOrElevation, dateTime, location = null, latlng) {
     this.type = type;
     this.distance = distance;
     this.duration = duration;
     this.cadenceOrElevation = cadenceOrElevation;
     this.dateTime = dateTime;
     this.location = location;
+    this.latlng = latlng;
   }
 }
 exports.default = WorkoutData;
@@ -23953,8 +23967,8 @@ function insertNewWorkoutItem(workoutData) {
     <h4>${workoutData.type === 'running' ? '🏃‍♂️ Running' : '🚴‍♂️ Cycling'}</h4>
     <p class="workout-info">${workoutData.type === 'running' ? 'Ran' : 'Cycled'} ${workoutData.distance} kms for ${workoutData.duration} mins at ${workoutData.cadenceOrElevation} ${workoutData.type === 'running' ? 'steps/min' : 'm/min'}</p>
     <p class="date-place">On: ${workoutData.dateTime}</p>
-    
-    <p class='date-place'>At: ${workoutData.location ? workoutData.location : 'Not specified'} </p>
+
+    ${workoutData.location ? `<p class='date-place'> At: ${workoutData.location}</p>` : `<p class='date-place'> </p>`} 
 
   </div>
   </div>
@@ -23962,6 +23976,29 @@ function insertNewWorkoutItem(workoutData) {
   allWorkoutsList.insertAdjacentHTML('afterbegin', html);
 }
 
-},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}]},["7sNyx","5rkFb"], "5rkFb", "parcelRequire03eb")
+},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"54Bwm":[function(require,module,exports) {
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+_parcelHelpers.export(exports, "insertWorkoutPin", function () {
+  return insertWorkoutPin;
+});
+var _leaflet = require('leaflet');
+var _leafletDefault = _parcelHelpers.interopDefault(_leaflet);
+function insertWorkoutPin(myMap, workoutData) {
+  // After the form data is entered display the tooltip
+  const marker = _leafletDefault.default.marker([workoutData.latlng.lat, workoutData.latlng.lng]).addTo(myMap);
+  // Add marker to map
+  // Customize tool tip
+  const popupOptions = {
+    maxWidth: 250,
+    minWidth: 100,
+    autoClose: false,
+    closeOnClick: false,
+    className: workoutData.type === 'running' ? 'running-popup' : 'cycling-popup'
+  };
+  marker.bindPopup(_leafletDefault.default.popup(popupOptions)).setPopupContent(`<strong>${workoutData.type === 'running' ? '🏃‍♂️ Running' : '🚴‍♂️ Cycling'}</strong> <br /> ${workoutData.distance} km, ${workoutData.duration} mins, ${workoutData.cadenceOrElevation} steps/min`).openPopup();
+}
+
+},{"leaflet":"QyATM","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}]},["7sNyx","5rkFb"], "5rkFb", "parcelRequire03eb")
 
 //# sourceMappingURL=index.3fafb3e2.js.map

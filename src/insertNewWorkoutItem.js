@@ -11,10 +11,12 @@ export function insertNewWorkoutItem(workoutData) {
     workoutData.cadenceOrElevation
   } ${workoutData.type === 'running' ? 'steps/min' : 'm/min'}</p>
     <p class="date-place">On: ${workoutData.dateTime}</p>
-    
-    <p class='date-place'>At: ${
-      workoutData.location ? workoutData.location : 'Not specified'
-    } </p>
+
+    ${
+      workoutData.location
+        ? `<p class='date-place'> At: ${workoutData.location}</p>`
+        : `<p class='date-place'> </p>`
+    } 
 
   </div>
   </div>

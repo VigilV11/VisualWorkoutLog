@@ -5,7 +5,8 @@ class WorkoutData {
     duration,
     cadenceOrElevation,
     dateTime,
-    location = null
+    location = null,
+    latlng
   ) {
     this.type = type;
     this.distance = distance;
@@ -13,6 +14,7 @@ class WorkoutData {
     this.cadenceOrElevation = cadenceOrElevation;
     this.dateTime = dateTime;
     this.location = location;
+    this.latlng = latlng;
   }
 }
 

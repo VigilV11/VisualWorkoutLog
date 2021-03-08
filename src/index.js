@@ -16,6 +16,7 @@ import { HTML_WORKOUT_FORM, HTML_WORKOUT_ITEM } from './constants';
 
 import WorkoutData from './WorkoutData';
 import { insertNewWorkoutItem } from './insertNewWorkoutItem';
+import { insertWorkoutPin } from './insertWorkoutPin.js';
 
 //++++++++++++++++  REQUIRED API KEYS ++++++++++++++++\\
 // LOCATIONIQ_API_KEY in constants.js from https://locationiq.com/ for reverse geocoding
@@ -24,22 +25,24 @@ import { insertNewWorkoutItem } from './insertNewWorkoutItem';
 //++++++++++++++++  GLOBAL VARIABLES ++++++++++++++++\\
 let marker;
 let myMap;
-let mapClickLat;
-let mapClickLng;
 let allWorkouts = [];
 let mainLocation;
+let currentLatLng;
 
 //++++++++++++++++ SELECTING DOM NODES ++++++++++++++++\\
 const allWorkoutsList = document.querySelector('.all-workouts-list');
 //++++++++++++++++ LOAD FROM LOCAL STORAGE ++++++++++++++++\\
-if (localStorage.allWorkouts) {
-  allWorkouts = JSON.parse(localStorage.getItem('allWorkouts'));
 
-  allWorkouts.forEach((task) => {
-    console.log(task);
-  });
+function loadStoredData() {
+  if (localStorage.allWorkouts) {
+    allWorkouts = JSON.parse(localStorage.getItem('allWorkouts'));
+
+    allWorkouts.forEach((task) => {
+      insertNewWorkoutItem(task);
+      insertWorkoutPin(myMap, task);
+    });
+  }
 }
-
 //++++++++++++++++ ADD EVENT LISTENERS ++++++++++++++++\\
 // Event listener to monitor form submission (Enter key)
 allWorkoutsList.addEventListener('submit', (e) => {
@@ -69,17 +72,15 @@ allWorkoutsList.addEventListener('submit', (e) => {
     return;
   }
 
-  console.log(workoutCadence.value);
-
   const workoutData = new WorkoutData(
     workoutType.value,
     workoutDistance.value,
     workoutDuration.value,
     workoutCadence.value,
     new Date().toLocaleString(),
-    mainLocation
+    mainLocation,
+    currentLatLng
   );
-  console.log(workoutData);
 
   // Set form to default values:
   workoutType.value = 'running';
@@ -99,7 +100,7 @@ allWorkoutsList.addEventListener('submit', (e) => {
   workoutForm.remove();
 
   // After the form data is entered display the tooltip
-  marker = L.marker([mapClickLat, mapClickLng]).addTo(myMap); // Add marker to map
+  marker = L.marker([currentLatLng.lat, currentLatLng.lng]).addTo(myMap); // Add marker to map
 
   // Customize tool tip
   const popupOptions = {
@@ -161,7 +162,7 @@ const loadMap = async function () {
   const res = await getPosition();
 
   const { latitude: lat, longitude: lng } = res.coords;
-
+  currentLatLng = { lat, lng };
   let mapObj = L.map('map').setView([lat, lng], 13); // second parameter is the map zoom level
 
   L.tileLayer(mapAPI, mapAttribution).addTo(mapObj);
@@ -181,16 +182,23 @@ const getLocationData = async function (lat, lng) {
 
 const main = async function () {
   myMap = await loadMap();
+  loadStoredData();
   myMap.on('click', onMapClick); // Add click event listener to map
 };
 
 async function onMapClick(e) {
-  ({
-    latlng: { lat: mapClickLat, lng: mapClickLng },
-  } = e);
+  // ({
+  //   latlng: { lat, lng },
+  // } = e);
 
-  // Uncomment if you want location information
-  // const location = await getLocationData(mapClickLat, mapClickLng); // Get location data by reverse geocoding
+  const {
+    latlng: { lat, lng },
+  } = e;
+
+  currentLatLng = { lat, lng };
+
+  // // Uncomment if you want location information
+  // const location = await getLocationData(lat, lng); // Get location data by reverse geocoding
   // mainLocation = location.split(',').slice(0, 2).join(',');
 
   // Show workout form
