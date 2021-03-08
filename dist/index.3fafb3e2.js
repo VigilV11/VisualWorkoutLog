@@ -464,18 +464,22 @@ var _WorkoutData = require('./WorkoutData');
 var _WorkoutDataDefault = _parcelHelpers.interopDefault(_WorkoutData);
 var _insertNewWorkoutItem = require('./insertNewWorkoutItem');
 var _insertWorkoutPinJs = require('./insertWorkoutPin.js');
-// ++++++++++++++++  REQUIRED API KEYS ++++++++++++++++\\
-// LOCATIONIQ_API_KEY in constants.js from https://locationiq.com/ for reverse geocoding
-// MAPBOX_API_KEY in constants.js from https://www.mapbox.com/ for displaying the map
-// ++++++++++++++++  GLOBAL VARIABLES ++++++++++++++++\\
+// ---- MARK: api keys for additional functionality --------------------------------------
+// LOCATIONIQ_API_KEY in constants.js from https://locationiq.com/ for reverse geocoding (to get the location information based on the clicked co-ordinates)
+// MAPBOX_API_KEY in constants.js from https://www.mapbox.com/ for displaying an alternative map
+// ---- MARK: global variables -----------------------------------------------------------
 let marker;
 let myMap;
 let allWorkouts = [];
 let mainLocation;
 let currentLatLng;
-// ++++++++++++++++ SELECTING DOM NODES ++++++++++++++++\\
+// ---- MARK: select DOM nodes -----------------------------------------------------------
 const allWorkoutsList = document.querySelector('.all-workouts-list');
-// ++++++++++++++++ LOAD FROM LOCAL STORAGE ++++++++++++++++\\
+// --------------------------------------------------------------------------------------//
+// //
+// MARK: LOAD FROM LOCAL STORAGE                             //
+// //
+// --------------------------------------------------------------------------------------//
 function loadStoredData() {
   if (localStorage.allWorkouts) {
     allWorkouts = JSON.parse(localStorage.getItem('allWorkouts'));
@@ -485,8 +489,14 @@ function loadStoredData() {
     });
   }
 }
-// ++++++++++++++++ ADD EVENT LISTENERS ++++++++++++++++\\
-// Event listener to monitor form submission (Enter key)
+// --------------------------------------------------------------------------------------//
+// //
+// MARK: EVENT LISTENERS                                 //
+// //
+// --------------------------------------------------------------------------------------//
+// --------------------------------------------------------------------------------------//
+// MARK: ...workout form submission                           //
+// --------------------------------------------------------------------------------------//
 allWorkoutsList.addEventListener('submit', e => {
   // If the event was not triggered by the form element, return immediately
   if (e.target.nodeName !== 'FORM') return;
@@ -529,8 +539,9 @@ allWorkoutsList.addEventListener('submit', e => {
   };
   marker.bindPopup(_leafletDefault.default.popup(popupOptions)).setPopupContent(`<strong>${workoutData.type === 'running' ? '🏃‍♂️ Running' : '🚴‍♂️ Cycling'}</strong> <br /> ${workoutData.distance} km, ${workoutData.duration} mins, ${workoutData.cadenceOrElevation} steps/min`).openPopup();
 });
-// Event listener to change field values for running and cycling
-// workoutType.addEventListener('change', (e) => {
+// --------------------------------------------------------------------------------------//
+// MARK: ...change input fields based on type of workout                 //
+// --------------------------------------------------------------------------------------//
 allWorkoutsList.addEventListener('change', e => {
   // If its not form type, return immediately
   if (!e.target.classList.contains('form-type')) return;
@@ -544,19 +555,29 @@ allWorkoutsList.addEventListener('change', e => {
     workoutCadence.attributes.placeholder.value = 'step/min';
   }
 });
-// Hide the form if cancel button is pressed
-// formCancelButton.addEventListener('click', () => {
+// --------------------------------------------------------------------------------------//
+// MARK: ...hide the form if cancel button is pressed                 //
+// --------------------------------------------------------------------------------------//
 allWorkoutsList.addEventListener('click', e => {
   // If it is not the cancel button, return immediately
   if (!e.target.classList.contains('cancel-button')) return;
   const workoutForm = document.querySelector('.workout-form-outbox');
   workoutForm.remove();
 });
-// ++++++++++++++++ PROMISIFYING GEOLOCATION API CALL ++++++++++++++++\\
+// --------------------------------------------------------------------------------------//
+// //
+// MARK: HELPER FUNCTIONS                                //
+// //
+// --------------------------------------------------------------------------------------//
+// --------------------------------------------------------------------------------------//
+// MARK: ...promisifying the geolocation api                       //
+// --------------------------------------------------------------------------------------//
 const getPosition = function () {
   return new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject));
 };
-// ++++++++++++++++ DISPLAY MAP TO CURRENT POSITION ++++++++++++++++\\
+// --------------------------------------------------------------------------------------//
+// MARK: ...display map to users current location when it loads             //
+// --------------------------------------------------------------------------------------//
 const loadMap = async function () {
   const res = await getPosition();
   const {latitude: lat, longitude: lng} = res.coords;
@@ -569,18 +590,17 @@ const loadMap = async function () {
   _leafletDefault.default.tileLayer(_constantsJs.mapAPIOpenStreetMap, _constantsJs.mapAttributionOpenStreetMap).addTo(mapObj);
   return mapObj;
 };
-// ++++++++++++++++ GET LOCATION DATA ++++++++++++++++\\
+// --------------------------------------------------------------------------------------//
+// MARK: ...reverse geocoding based on map click position                //
+// --------------------------------------------------------------------------------------//
 const getLocationData = async function (lat, lng) {
   const res = await fetch(`${_constants.locationDataAPI}&lat=${lat}&lon=${lng}`);
   const data = await res.json();
   return data.display_name;
 };
-// ++++++++++++++++ GET USER CLICK LOCATION ++++++++++++++++\\
-const main = async function () {
-  myMap = await loadMap();
-  loadStoredData();
-  myMap.on('click', onMapClick);
-};
+// --------------------------------------------------------------------------------------//
+// MARK: ...user clicks on the map                            //
+// --------------------------------------------------------------------------------------//
 async function onMapClick(e) {
   const {latlng: {lat, lng}} = e;
   currentLatLng = {
@@ -594,7 +614,16 @@ async function onMapClick(e) {
   const workoutForm = document.querySelector('.workout-form-outbox');
   if (!workoutForm?.classList?.contains?.('workout-form-outbox')) allWorkoutsList.insertAdjacentHTML('afterbegin', _constants.HTML_WORKOUT_FORM);
 }
-main();
+// --------------------------------------------------------------------------------------//
+// //
+// MARK: MAIN FUNCTION                                  //
+// //
+// --------------------------------------------------------------------------------------//
+(async function () {
+  myMap = await loadMap();
+  loadStoredData();
+  myMap.on('click', onMapClick);
+})();
 
 },{"leaflet":"QyATM","core-js/stable":"1PFvP","regenerator-runtime/runtime":"62Qib","./constants.js":"5vBc0","./constants":"5vBc0","./WorkoutData":"7rZ4t","./insertNewWorkoutItem":"39qoD","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./insertWorkoutPin.js":"54Bwm"}],"QyATM":[function(require,module,exports) {
 var define;

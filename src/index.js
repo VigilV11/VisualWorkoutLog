@@ -1,4 +1,12 @@
-import L from 'leaflet';
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                               MARK: VISUAL WORKOUT LOG                               //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
+// ---- MARK: imports; -------------------------------------------------------------------
+
+import L, { Marker } from 'leaflet';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 // import {
@@ -18,20 +26,28 @@ import WorkoutData from './WorkoutData';
 import { insertNewWorkoutItem } from './insertNewWorkoutItem';
 import { insertWorkoutPin } from './insertWorkoutPin.js';
 
-//++++++++++++++++  REQUIRED API KEYS ++++++++++++++++\\
-// LOCATIONIQ_API_KEY in constants.js from https://locationiq.com/ for reverse geocoding
-// MAPBOX_API_KEY in constants.js from https://www.mapbox.com/ for displaying the map
+// ---- MARK: api keys for additional functionality --------------------------------------
 
-//++++++++++++++++  GLOBAL VARIABLES ++++++++++++++++\\
+// LOCATIONIQ_API_KEY in constants.js from https://locationiq.com/ for reverse geocoding (to get the location information based on the clicked co-ordinates)
+// MAPBOX_API_KEY in constants.js from https://www.mapbox.com/ for displaying an alternative map
+
+// ---- MARK: global variables -----------------------------------------------------------
+
 let marker;
 let myMap;
 let allWorkouts = [];
 let mainLocation;
 let currentLatLng;
 
-//++++++++++++++++ SELECTING DOM NODES ++++++++++++++++\\
+// ---- MARK: select DOM nodes -----------------------------------------------------------
+
 const allWorkoutsList = document.querySelector('.all-workouts-list');
-//++++++++++++++++ LOAD FROM LOCAL STORAGE ++++++++++++++++\\
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                            MARK: LOAD FROM LOCAL STORAGE                             //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
 
 function loadStoredData() {
   if (localStorage.allWorkouts) {
@@ -43,8 +59,17 @@ function loadStoredData() {
     });
   }
 }
-//++++++++++++++++ ADD EVENT LISTENERS ++++++++++++++++\\
-// Event listener to monitor form submission (Enter key)
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                MARK: EVENT LISTENERS                                 //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
+//--------------------------------------------------------------------------------------//
+//                           MARK: ...workout form submission                           //
+//--------------------------------------------------------------------------------------//
+
 allWorkoutsList.addEventListener('submit', (e) => {
   // If the event was not triggered by the form element, return immediately
   if (e.target.nodeName !== 'FORM') return;
@@ -124,8 +149,10 @@ allWorkoutsList.addEventListener('submit', (e) => {
     .openPopup();
 });
 
-// Event listener to change field values for running and cycling
-// workoutType.addEventListener('change', (e) => {
+//--------------------------------------------------------------------------------------//
+//                MARK: ...change input fields based on type of workout                 //
+//--------------------------------------------------------------------------------------//
+
 allWorkoutsList.addEventListener('change', (e) => {
   // If its not form type, return immediately
   if (!e.target.classList.contains('form-type')) return;
@@ -142,22 +169,37 @@ allWorkoutsList.addEventListener('change', (e) => {
   }
 });
 
-// Hide the form if cancel button is pressed
-// formCancelButton.addEventListener('click', () => {
+//--------------------------------------------------------------------------------------//
+//                   MARK: ...hide the form if cancel button is pressed                 //
+//--------------------------------------------------------------------------------------//
+
 allWorkoutsList.addEventListener('click', (e) => {
   // If it is not the cancel button, return immediately
   if (!e.target.classList.contains('cancel-button')) return;
   const workoutForm = document.querySelector('.workout-form-outbox');
   workoutForm.remove();
 });
-//++++++++++++++++ PROMISIFYING GEOLOCATION API CALL ++++++++++++++++\\
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                MARK: HELPER FUNCTIONS                                //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
+//--------------------------------------------------------------------------------------//
+//                      MARK: ...promisifying the geolocation api                       //
+//--------------------------------------------------------------------------------------//
+
 const getPosition = function () {
   return new Promise((resolve, reject) =>
     navigator.geolocation.getCurrentPosition(resolve, reject)
   );
 };
 
-//++++++++++++++++ DISPLAY MAP TO CURRENT POSITION ++++++++++++++++\\
+//--------------------------------------------------------------------------------------//
+//             MARK: ...display map to users current location when it loads             //
+//--------------------------------------------------------------------------------------//
+
 const loadMap = async function () {
   const res = await getPosition();
 
@@ -170,7 +212,9 @@ const loadMap = async function () {
   return mapObj;
 };
 
-//++++++++++++++++ GET LOCATION DATA ++++++++++++++++\\
+//--------------------------------------------------------------------------------------//
+//                MARK: ...reverse geocoding based on map click position                //
+//--------------------------------------------------------------------------------------//
 
 const getLocationData = async function (lat, lng) {
   const res = await fetch(`${locationDataAPI}&lat=${lat}&lon=${lng}`);
@@ -178,13 +222,9 @@ const getLocationData = async function (lat, lng) {
   return data.display_name;
 };
 
-//++++++++++++++++ GET USER CLICK LOCATION ++++++++++++++++\\
-
-const main = async function () {
-  myMap = await loadMap();
-  loadStoredData();
-  myMap.on('click', onMapClick); // Add click event listener to map
-};
+//--------------------------------------------------------------------------------------//
+//                           MARK: ...user clicks on the map                            //
+//--------------------------------------------------------------------------------------//
 
 async function onMapClick(e) {
   const {
@@ -204,4 +244,14 @@ async function onMapClick(e) {
     allWorkoutsList.insertAdjacentHTML('afterbegin', HTML_WORKOUT_FORM);
 }
 
-main();
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                 MARK: MAIN FUNCTION                                  //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
+(async function () {
+  myMap = await loadMap();
+  loadStoredData();
+  myMap.on('click', onMapClick); // Add click event listener to map
+})();
