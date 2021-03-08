@@ -582,9 +582,6 @@ const main = async function () {
   myMap.on('click', onMapClick);
 };
 async function onMapClick(e) {
-  // ({
-  // latlng: { lat, lng },
-  // } = e);
   const {latlng: {lat, lng}} = e;
   currentLatLng = {
     lat,
