@@ -3,8 +3,8 @@ import L from 'leaflet';
 export function insertWorkoutPin(myMap, workoutData) {
   // After the form data is entered display the tooltip
   const marker = L.marker([
-    workoutData.latlng.lat,
-    workoutData.latlng.lng,
+    workoutData.coords.lat,
+    workoutData.coords.lng,
   ]).addTo(myMap); // Add marker to map
 
   // Customize tool tip
@@ -20,11 +20,15 @@ export function insertWorkoutPin(myMap, workoutData) {
   marker
     .bindPopup(L.popup(popupOptions))
     .setPopupContent(
-      `<strong>${
+      `<strong class="leaflet-popup-content">${
         workoutData.type === 'running' ? '🏃‍♂️ Running' : '🚴‍♂️ Cycling'
       }</strong> <br /> ${workoutData.distance} km, ${
         workoutData.duration
-      } mins, ${workoutData.cadenceOrElevation} steps/min`
+      } mins, ${
+        workoutData.type === 'running'
+          ? workoutData.cadence
+          : workoutData.elevation
+      } ${workoutData.type === 'running' ? 'steps/min' : 'm/min'}`
     )
     .openPopup();
 }

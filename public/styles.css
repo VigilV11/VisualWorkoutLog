@@ -1,6 +1,6 @@
 :root {
   --color-dark--1: #333;
-  --color-dark--2: #555;
+  --color-dark--2: #777;
   --color-light--1: #ccc;
   --color-light--2: #eee;
   --color-brand--1: rgb(231, 188, 47);
@@ -15,8 +15,33 @@
 
 body {
   background-color: var(--color-dark--2);
+}
+
+.contents {
+  width: 100vw;
+  height: 100vh;
   display: flex;
-  margin: auto;
+  justify-content: center;
+  align-items: center;
+}
+
+#workout-list {
+  width: 400px;
+  height: 600px;
+  background-color: #333;
+  overflow-y: auto;
+  display: inline-block;
+  margin-right: -5px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+#map {
+  width: 600px;
+  height: 600px;
+  display: inline-block;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 /* COMMON */
@@ -66,12 +91,6 @@ label {
 }
 
 /* WORKOUT LIST */
-#workout-list {
-  width: 400px;
-  height: 600px;
-  background-color: #333;
-  overflow-y: auto;
-}
 
 #workout-list h2 {
   color: #eee;
@@ -95,11 +114,6 @@ label {
   width: 320px;
   /* justify-content: center; */
 }
-/* MAP */
-#map {
-  width: 800px;
-  height: 600px;
-}
 
 /* POPUP PIN */
 
@@ -109,6 +123,7 @@ label {
   color: var(--color-light--2);
   border-radius: 5px;
   padding-right: 0.6rem;
+  cursor: pointer;
 }
 
 .leaflet-popup .leaflet-popup-content {
@@ -145,6 +160,7 @@ label {
   margin: 0 auto;
   width: 300px;
   /* justify-content: center; */
+  cursor: pointer;
 }
 
 .workout-item-inbox h4 {

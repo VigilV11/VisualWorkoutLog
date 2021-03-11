@@ -18,9 +18,12 @@
   },
   "homepage": "https://github.com/VigilV11/VisualWorkoutLog#readme",
   "dependencies": {
+    "@parcel/plugin": "^2.0.0-nightly.609",
+    "@parcel/transformer-js": "^2.0.0-nightly.609",
     "core-js": "^3.9.0",
     "dotenv": "^7.0.0",
     "leaflet": "^1.7.1",
+    "nanoid": "^3.1.20",
     "regenerator-runtime": "^0.13.7"
   },
   "devDependencies": {

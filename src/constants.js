@@ -74,54 +74,54 @@ export const HTML_WORKOUT_FORM = `
 </div>
 </div>`;
 
-export const HTML_WORKOUT_ITEM = `        
-<div class="workout-form-outbox">
-<div class="workout-form-inbox">
-  <form action="">
-    <div class="workout-form-line">
-      <label for="type"
-        >Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label
-      >
-      <select class="form-type" name="type" id="type">
-        <option value="running" selected>Running</option>
-        <option value="cycling">Cycling</option></select
-      >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// export const HTML_WORKOUT_ITEM = `
+// <div class="workout-form-outbox">
+// <div class="workout-form-inbox">
+//   <form action="">
+//     <div class="workout-form-line">
+//       <label for="type"
+//         >Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label
+//       >
+//       <select class="form-type" name="type" id="type">
+//         <option value="running" selected>Running</option>
+//         <option value="cycling">Cycling</option></select
+//       >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-      <label for="distance">Distance &nbsp;&nbsp;&nbsp;</label>
-      <input
-        class="form-distance"
-        type="text"
-        name="distance"
-        id="distance"
-        placeholder="km"
-      />
-    </div>
+//       <label for="distance">Distance &nbsp;&nbsp;&nbsp;</label>
+//       <input
+//         class="form-distance"
+//         type="text"
+//         name="distance"
+//         id="distance"
+//         placeholder="km"
+//       />
+//     </div>
 
-    <div class="workout-form-line">
-      <label for="duration">Duration &nbsp;&nbsp;</label>
-      <input
-        class="form-duration"
-        type="text"
-        name="duration"
-        id="duration"
-        placeholder="min"
-      />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+//     <div class="workout-form-line">
+//       <label for="duration">Duration &nbsp;&nbsp;</label>
+//       <input
+//         class="form-duration"
+//         type="text"
+//         name="duration"
+//         id="duration"
+//         placeholder="min"
+//       />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-      <label class="label-cadence" for="cadence"
-        >Cadence &nbsp;&nbsp;&nbsp;</label
-      >
-      <input
-        class="form-cadence"
-        type="text"
-        name="cadence"
-        id="cadence"
-        placeholder="step/min"
-      />
-    </div>
-    <div class="form-buttons">
-      <button class="submit-button" type="submit">Submit</button>
-      <button class="cancel-button" type="button">Cancel</button>
-    </div>
-  </form>
-</div>
-</div>`;
+//       <label class="label-cadence" for="cadence"
+//         >Cadence &nbsp;&nbsp;&nbsp;</label
+//       >
+//       <input
+//         class="form-cadence"
+//         type="text"
+//         name="cadence"
+//         id="cadence"
+//         placeholder="step/min"
+//       />
+//     </div>
+//     <div class="form-buttons">
+//       <button class="submit-button" type="submit">Submit</button>
+//       <button class="cancel-button" type="button">Cancel</button>
+//     </div>
+//   </form>
+// </div>
+// </div>`;

@@ -8,7 +8,7 @@ export function insertNewWorkoutItem(workoutData) {
     <p class="workout-info">${
       workoutData.type === 'running' ? 'Ran' : 'Cycled'
     } ${workoutData.distance} kms for ${workoutData.duration} mins at ${
-    workoutData.cadenceOrElevation
+    workoutData.type === 'running' ? workoutData.cadence : workoutData.elevation
   } ${workoutData.type === 'running' ? 'steps/min' : 'm/min'}</p>
     <p class="date-place">On: ${workoutData.dateTime}</p>
 
