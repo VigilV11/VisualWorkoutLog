@@ -63,7 +63,7 @@ export const HTML_WORKOUT_FORM = `
         type="text"
         name="cadence"
         id="cadence"
-        placeholder="step/min"
+        placeholder="steps/min"
       />
     </div>
     <div class="form-buttons">

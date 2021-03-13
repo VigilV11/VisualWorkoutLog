@@ -31,8 +31,8 @@ import { HTML_WORKOUT_FORM, HTML_WORKOUT_ITEM } from './constants';
 
 import { insertNewWorkoutItem } from './insertNewWorkoutItem';
 import { insertWorkoutPin } from './insertWorkoutPin.js';
-import Running from './Running.js';
-import Cycling from './Cycling.js';
+// import Running from './Running.js';
+// import Cycling from './Cycling.js';
 
 // ---- MARK: api keys for additional functionality --------------------------------------
 
@@ -42,6 +42,45 @@ import Cycling from './Cycling.js';
 // ---- MARK: select DOM nodes -----------------------------------------------------------
 
 const allWorkoutsList = document.querySelector('.all-workouts-list');
+
+class Workout {
+  id = nanoid();
+  dateTime = new Date().toLocaleString();
+  constructor(distance, duration, location = null, coords) {
+    this.distance = distance;
+    this.duration = duration;
+    this.location = location;
+    this.coords = coords;
+  }
+}
+
+class Running extends Workout {
+  constructor(distance, duration, location = null, coords, type, cadence) {
+    super(distance, duration, location, coords);
+    this.type = type;
+    this.cadence = cadence;
+    this.#calcPace();
+  }
+
+  #calcPace() {
+    // min/km
+    this.pace = this.duration / this.distance;
+  }
+}
+
+class Cycling extends Workout {
+  constructor(distance, duration, location = null, coords, type, elevation) {
+    super(distance, duration, location, coords);
+    this.type = type;
+    this.elevation = elevation;
+    this.#calcSpeed();
+  }
+
+  #calcSpeed() {
+    // km/h
+    this.speed = this.distance / (this.duration / 60);
+  }
+}
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -146,14 +185,14 @@ class App {
 
     // If a number is not entered in the input fields the code will issue an alert and not proceed
     if (
-      !Number.isFinite(+workoutDistance.value) ||
-      workoutDistance.value === '' ||
-      !Number.isFinite(+workoutDuration.value) ||
-      workoutDuration.value === '' ||
-      !Number.isFinite(+workoutCadence.value) ||
-      workoutCadence.value === ''
+      !+workoutDistance.value || // Checks for 0, '',  and string input
+      workoutDistance.value < 0 || // Checks for negative numbers; < operator does type coercion
+      !+workoutDuration.value ||
+      workoutDuration.value < 0 ||
+      !+workoutCadence.value ||
+      workoutCadence.value < 0
     ) {
-      alert('Enter a numeric value!');
+      alert('Enter a positive numeric value!');
       return;
     }
 
@@ -161,10 +200,8 @@ class App {
 
     if (workoutType.value === 'running') {
       newWorkout = new Running(
-        nanoid(),
         workoutDistance.value,
         workoutDuration.value,
-        new Date().toLocaleString(),
         this.#mainLocation,
         this.#coords,
         'running',
@@ -172,10 +209,8 @@ class App {
       );
     } else {
       newWorkout = new Cycling(
-        nanoid(),
         workoutDistance.value,
         workoutDuration.value,
-        new Date().toLocaleString(),
         this.#mainLocation,
         this.#coords,
         'cycling',
@@ -238,10 +273,10 @@ class App {
 
     if (e.target.value === 'cycling') {
       labelCadence.innerHTML = 'Elevation &nbsp;';
-      workoutCadence.attributes.placeholder.value = 'm/min';
+      workoutCadence.attributes.placeholder.value = 'meters';
     } else {
       labelCadence.innerHTML = 'Cadence &nbsp;&nbsp;&nbsp;';
-      workoutCadence.attributes.placeholder.value = 'step/min';
+      workoutCadence.attributes.placeholder.value = 'steps/min';
     }
   }
 
