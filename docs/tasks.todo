@@ -3,5 +3,5 @@
 
 [x] Refactor code and add comments
 [x] Center viewing area in viewport
-[] Highlight and pan to list item when clicked on map pin
-[] Highlight and pan to map when clicked on list item
+
+[x] Highlight and pan to map when clicked on list item

@@ -143,6 +143,7 @@ label {
 }
 
 /* WORKOUT LIST ITEMS */
+
 .workout-item-outbox {
   line-height: 1.4rem;
   margin: 5% auto;
@@ -154,13 +155,13 @@ label {
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
   /* text-align: center; */
   /* color: #eee; */
+  cursor: pointer;
 }
 .workout-item-inbox {
   display: block;
   margin: 0 auto;
   width: 300px;
   /* justify-content: center; */
-  cursor: pointer;
 }
 
 .workout-item-inbox h4 {
@@ -177,6 +178,14 @@ label {
 .workout-item-inbox .date-place {
   font-style: oblique;
   color: rgb(241, 223, 163);
+}
+
+.workout-running-item {
+  border-left: 5px solid var(--color-brand--2);
+}
+
+.workout-cycling-item {
+  border-left: 5px solid var(--color-brand--1);
 }
 
 /*# sourceMappingURL=index.1a0281d4.css.map */

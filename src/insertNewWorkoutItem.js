@@ -2,7 +2,9 @@ export function insertNewWorkoutItem(workoutData) {
   const allWorkoutsList = document.querySelector('.all-workouts-list');
 
   const html = `
-  <div class="workout-item-outbox">
+  <div class="workout-item-outbox workout-${
+    workoutData.type === 'running' ? 'running' : 'cycling'
+  }-item" data-id=${workoutData.id}>
   <div class="workout-item-inbox">
     <h4>${workoutData.type === 'running' ? '🏃‍♂️ Running' : '🚴‍♂️ Cycling'}</h4>
     <p class="workout-info">${

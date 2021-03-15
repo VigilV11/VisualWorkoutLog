@@ -514,6 +514,11 @@ function _defineProperty(obj, key, value) {
 // MAPBOX_API_KEY in constants.js from https://www.mapbox.com/ for displaying an alternative map
 // ---- MARK: select DOM nodes -----------------------------------------------------------
 const allWorkoutsList = document.querySelector('.all-workouts-list');
+// --------------------------------------------------------------------------------------//
+// //
+// MARK: DATA MODEL                                   //
+// //
+// --------------------------------------------------------------------------------------//
 class Workout {
   constructor(distance, duration, location = null, coords) {
     _defineProperty(this, "id", _nanoid.nanoid());
@@ -554,6 +559,7 @@ var _calcSpeed2 = function _calcSpeed2() {
 };
 var _allWorkouts = new WeakMap();
 var _map = new WeakMap();
+var _mapZoomLevel = new WeakMap();
 var _coords = new WeakMap();
 var _mainLocation = new WeakMap();
 var _marker = new WeakMap();
@@ -565,6 +571,7 @@ var _newWorkout = new WeakSet();
 var _toggleElevationField = new WeakSet();
 var _cancelForm = new WeakSet();
 var _reverseGeoCoding = new WeakSet();
+var _panToMapOnItemClick = new WeakSet();
 // --------------------------------------------------------------------------------------//
 // //
 // MARK: MAIN CLASS - APP                                //
@@ -572,6 +579,7 @@ var _reverseGeoCoding = new WeakSet();
 // --------------------------------------------------------------------------------------//
 class App {
   constructor() {
+    _panToMapOnItemClick.add(this);
     _reverseGeoCoding.add(this);
     _cancelForm.add(this);
     _toggleElevationField.add(this);
@@ -587,6 +595,10 @@ class App {
     _map.set(this, {
       writable: true,
       value: void 0
+    });
+    _mapZoomLevel.set(this, {
+      writable: true,
+      value: 17
     });
     _coords.set(this, {
       writable: true,
@@ -606,6 +618,7 @@ class App {
     allWorkoutsList.addEventListener('submit', _classPrivateMethodGet(this, _newWorkout, _newWorkout2).bind(this));
     // Binding the 'this' of the instance. Otherwise 'allWorkoutsList' would take the value of 'this'.
     allWorkoutsList.addEventListener('click', _classPrivateMethodGet(this, _cancelForm, _cancelForm2));
+    allWorkoutsList.addEventListener('click', _classPrivateMethodGet(this, _panToMapOnItemClick, _panToMapOnItemClick2).bind(this));
   }
 }
 var _loadMap2 = async function _loadMap2() {
@@ -615,7 +628,7 @@ var _loadMap2 = async function _loadMap2() {
     lat,
     lng
   });
-  _classPrivateFieldSet(this, _map, _leafletDefault.default.map('map').setView([lat, lng], 13));
+  _classPrivateFieldSet(this, _map, _leafletDefault.default.map('map').setView([lat, lng], _classPrivateFieldGet(this, _mapZoomLevel)));
   // second parameter is the map zoom level
   _leafletDefault.default.tileLayer(_constantsJs.mapAPIOpenStreetMap, _constantsJs.mapAttributionOpenStreetMap).addTo(_classPrivateFieldGet(this, _map));
   // Add click event listener to map
@@ -723,6 +736,18 @@ var _reverseGeoCoding2 = async function _reverseGeoCoding2({lat, lng}) {
   const res = await fetch(`${_constants.locationDataAPI}&lat=${lat}&lon=${lng}`);
   const data = await res.json();
   return data.display_name;
+};
+var _panToMapOnItemClick2 = function _panToMapOnItemClick2(e) {
+  const item = e.target.closest('.workout-item-outbox');
+  // If target is not a workout list item, return
+  if (!item) return;
+  const workoutItem = _classPrivateFieldGet(this, _allWorkouts).find(itemDate => itemDate.id === item.dataset.id);
+  _classPrivateFieldGet(this, _map).setView([workoutItem.coords.lat, workoutItem.coords.lng], _classPrivateFieldGet(this, _mapZoomLevel), {
+    animate: true,
+    pan: {
+      duration: 1
+    }
+  });
 };
 const app = new App();
 
@@ -33636,7 +33661,7 @@ module.exports = function (buffer) {
 },{"md5.js":"65Wnb"}],"4LA2v":[function(require,module,exports) {
 module.exports = require('./browser/algorithms.json')
 
-},{"./browser/algorithms.json":"IzM4b"}],"IzM4b":[function(require,module,exports) {
+},{"./browser/algorithms.json":"3wKCN"}],"3wKCN":[function(require,module,exports) {
 module.exports = JSON.parse("{\"sha224WithRSAEncryption\":{\"sign\":\"rsa\",\"hash\":\"sha224\",\"id\":\"302d300d06096086480165030402040500041c\"},\"RSA-SHA224\":{\"sign\":\"ecdsa/rsa\",\"hash\":\"sha224\",\"id\":\"302d300d06096086480165030402040500041c\"},\"sha256WithRSAEncryption\":{\"sign\":\"rsa\",\"hash\":\"sha256\",\"id\":\"3031300d060960864801650304020105000420\"},\"RSA-SHA256\":{\"sign\":\"ecdsa/rsa\",\"hash\":\"sha256\",\"id\":\"3031300d060960864801650304020105000420\"},\"sha384WithRSAEncryption\":{\"sign\":\"rsa\",\"hash\":\"sha384\",\"id\":\"3041300d060960864801650304020205000430\"},\"RSA-SHA384\":{\"sign\":\"ecdsa/rsa\",\"hash\":\"sha384\",\"id\":\"3041300d060960864801650304020205000430\"},\"sha512WithRSAEncryption\":{\"sign\":\"rsa\",\"hash\":\"sha512\",\"id\":\"3051300d060960864801650304020305000440\"},\"RSA-SHA512\":{\"sign\":\"ecdsa/rsa\",\"hash\":\"sha512\",\"id\":\"3051300d060960864801650304020305000440\"},\"RSA-SHA1\":{\"sign\":\"rsa\",\"hash\":\"sha1\",\"id\":\"3021300906052b0e03021a05000414\"},\"ecdsa-with-SHA1\":{\"sign\":\"ecdsa\",\"hash\":\"sha1\",\"id\":\"\"},\"sha256\":{\"sign\":\"ecdsa\",\"hash\":\"sha256\",\"id\":\"\"},\"sha224\":{\"sign\":\"ecdsa\",\"hash\":\"sha224\",\"id\":\"\"},\"sha384\":{\"sign\":\"ecdsa\",\"hash\":\"sha384\",\"id\":\"\"},\"sha512\":{\"sign\":\"ecdsa\",\"hash\":\"sha512\",\"id\":\"\"},\"DSA-SHA\":{\"sign\":\"dsa\",\"hash\":\"sha1\",\"id\":\"\"},\"DSA-SHA1\":{\"sign\":\"dsa\",\"hash\":\"sha1\",\"id\":\"\"},\"DSA\":{\"sign\":\"dsa\",\"hash\":\"sha1\",\"id\":\"\"},\"DSA-WITH-SHA224\":{\"sign\":\"dsa\",\"hash\":\"sha224\",\"id\":\"\"},\"DSA-SHA224\":{\"sign\":\"dsa\",\"hash\":\"sha224\",\"id\":\"\"},\"DSA-WITH-SHA256\":{\"sign\":\"dsa\",\"hash\":\"sha256\",\"id\":\"\"},\"DSA-SHA256\":{\"sign\":\"dsa\",\"hash\":\"sha256\",\"id\":\"\"},\"DSA-WITH-SHA384\":{\"sign\":\"dsa\",\"hash\":\"sha384\",\"id\":\"\"},\"DSA-SHA384\":{\"sign\":\"dsa\",\"hash\":\"sha384\",\"id\":\"\"},\"DSA-WITH-SHA512\":{\"sign\":\"dsa\",\"hash\":\"sha512\",\"id\":\"\"},\"DSA-SHA512\":{\"sign\":\"dsa\",\"hash\":\"sha512\",\"id\":\"\"},\"DSA-RIPEMD160\":{\"sign\":\"dsa\",\"hash\":\"rmd160\",\"id\":\"\"},\"ripemd160WithRSA\":{\"sign\":\"rsa\",\"hash\":\"rmd160\",\"id\":\"3021300906052b2403020105000414\"},\"RSA-RIPEMD160\":{\"sign\":\"rsa\",\"hash\":\"rmd160\",\"id\":\"3021300906052b2403020105000414\"},\"md5WithRSAEncryption\":{\"sign\":\"rsa\",\"hash\":\"md5\",\"id\":\"3020300c06082a864886f70d020505000410\"},\"RSA-MD5\":{\"sign\":\"rsa\",\"hash\":\"md5\",\"id\":\"3020300c06082a864886f70d020505000410\"}}");
 },{}],"vWsg6":[function(require,module,exports) {
 exports.pbkdf2 = require('./lib/async')
@@ -34698,7 +34723,7 @@ exports.createDecipher = exports.Decipher = deciphers.createDecipher
 exports.createDecipheriv = exports.Decipheriv = deciphers.createDecipheriv
 exports.listCiphers = exports.getCiphers = getCiphers
 
-},{"./encrypter":"78IeQ","./decrypter":"2jpxk","./modes/list.json":"6sZp8"}],"78IeQ":[function(require,module,exports) {
+},{"./encrypter":"78IeQ","./decrypter":"2jpxk","./modes/list.json":"6qKCx"}],"78IeQ":[function(require,module,exports) {
 var MODES = require('./modes');
 var AuthCipher = require('./authCipher');
 var Buffer = require('safe-buffer').Buffer;
@@ -34810,7 +34835,7 @@ for (var key in modes) {
 
 module.exports = modes
 
-},{"./ecb":"2DQnK","./cbc":"6JLWx","./cfb":"z4CZo","./cfb8":"6bI4Y","./cfb1":"67vRp","./ofb":"I5wyj","./ctr":"4aveI","./list.json":"6sZp8"}],"2DQnK":[function(require,module,exports) {
+},{"./ecb":"2DQnK","./cbc":"6JLWx","./cfb":"z4CZo","./cfb8":"6bI4Y","./cfb1":"67vRp","./ofb":"I5wyj","./ctr":"4aveI","./list.json":"6qKCx"}],"2DQnK":[function(require,module,exports) {
 exports.encrypt = function (self, block) {
   return self._cipher.encryptBlock(block)
 }
@@ -34994,7 +35019,7 @@ function incr32 (iv) {
 }
 module.exports = incr32
 
-},{}],"6sZp8":[function(require,module,exports) {
+},{}],"6qKCx":[function(require,module,exports) {
 module.exports = JSON.parse("{\"aes-128-ecb\":{\"cipher\":\"AES\",\"key\":128,\"iv\":0,\"mode\":\"ECB\",\"type\":\"block\"},\"aes-192-ecb\":{\"cipher\":\"AES\",\"key\":192,\"iv\":0,\"mode\":\"ECB\",\"type\":\"block\"},\"aes-256-ecb\":{\"cipher\":\"AES\",\"key\":256,\"iv\":0,\"mode\":\"ECB\",\"type\":\"block\"},\"aes-128-cbc\":{\"cipher\":\"AES\",\"key\":128,\"iv\":16,\"mode\":\"CBC\",\"type\":\"block\"},\"aes-192-cbc\":{\"cipher\":\"AES\",\"key\":192,\"iv\":16,\"mode\":\"CBC\",\"type\":\"block\"},\"aes-256-cbc\":{\"cipher\":\"AES\",\"key\":256,\"iv\":16,\"mode\":\"CBC\",\"type\":\"block\"},\"aes128\":{\"cipher\":\"AES\",\"key\":128,\"iv\":16,\"mode\":\"CBC\",\"type\":\"block\"},\"aes192\":{\"cipher\":\"AES\",\"key\":192,\"iv\":16,\"mode\":\"CBC\",\"type\":\"block\"},\"aes256\":{\"cipher\":\"AES\",\"key\":256,\"iv\":16,\"mode\":\"CBC\",\"type\":\"block\"},\"aes-128-cfb\":{\"cipher\":\"AES\",\"key\":128,\"iv\":16,\"mode\":\"CFB\",\"type\":\"stream\"},\"aes-192-cfb\":{\"cipher\":\"AES\",\"key\":192,\"iv\":16,\"mode\":\"CFB\",\"type\":\"stream\"},\"aes-256-cfb\":{\"cipher\":\"AES\",\"key\":256,\"iv\":16,\"mode\":\"CFB\",\"type\":\"stream\"},\"aes-128-cfb8\":{\"cipher\":\"AES\",\"key\":128,\"iv\":16,\"mode\":\"CFB8\",\"type\":\"stream\"},\"aes-192-cfb8\":{\"cipher\":\"AES\",\"key\":192,\"iv\":16,\"mode\":\"CFB8\",\"type\":\"stream\"},\"aes-256-cfb8\":{\"cipher\":\"AES\",\"key\":256,\"iv\":16,\"mode\":\"CFB8\",\"type\":\"stream\"},\"aes-128-cfb1\":{\"cipher\":\"AES\",\"key\":128,\"iv\":16,\"mode\":\"CFB1\",\"type\":\"stream\"},\"aes-192-cfb1\":{\"cipher\":\"AES\",\"key\":192,\"iv\":16,\"mode\":\"CFB1\",\"type\":\"stream\"},\"aes-256-cfb1\":{\"cipher\":\"AES\",\"key\":256,\"iv\":16,\"mode\":\"CFB1\",\"type\":\"stream\"},\"aes-128-ofb\":{\"cipher\":\"AES\",\"key\":128,\"iv\":16,\"mode\":\"OFB\",\"type\":\"stream\"},\"aes-192-ofb\":{\"cipher\":\"AES\",\"key\":192,\"iv\":16,\"mode\":\"OFB\",\"type\":\"stream\"},\"aes-256-ofb\":{\"cipher\":\"AES\",\"key\":256,\"iv\":16,\"mode\":\"OFB\",\"type\":\"stream\"},\"aes-128-ctr\":{\"cipher\":\"AES\",\"key\":128,\"iv\":16,\"mode\":\"CTR\",\"type\":\"stream\"},\"aes-192-ctr\":{\"cipher\":\"AES\",\"key\":192,\"iv\":16,\"mode\":\"CTR\",\"type\":\"stream\"},\"aes-256-ctr\":{\"cipher\":\"AES\",\"key\":256,\"iv\":16,\"mode\":\"CTR\",\"type\":\"stream\"},\"aes-128-gcm\":{\"cipher\":\"AES\",\"key\":128,\"iv\":12,\"mode\":\"GCM\",\"type\":\"auth\"},\"aes-192-gcm\":{\"cipher\":\"AES\",\"key\":192,\"iv\":12,\"mode\":\"GCM\",\"type\":\"auth\"},\"aes-256-gcm\":{\"cipher\":\"AES\",\"key\":256,\"iv\":12,\"mode\":\"GCM\",\"type\":\"auth\"}}");
 },{}],"1h2Hy":[function(require,module,exports) {
 var aes = require('./aes');
@@ -35582,7 +35607,7 @@ function createDiffieHellman(prime, enc, generator, genc) {
 exports.DiffieHellmanGroup = exports.createDiffieHellmanGroup = exports.getDiffieHellman = getDiffieHellman;
 exports.createDiffieHellman = exports.DiffieHellman = createDiffieHellman;
 
-},{"buffer":"3susO","./lib/generatePrime":"2xAsE","./lib/primes.json":"2j26C","./lib/dh":"2oqT0"}],"2xAsE":[function(require,module,exports) {
+},{"buffer":"3susO","./lib/generatePrime":"2xAsE","./lib/primes.json":"6zfGX","./lib/dh":"2oqT0"}],"2xAsE":[function(require,module,exports) {
 var randomBytes = require('randombytes');
 module.exports = findPrime;
 findPrime.simpleSieve = simpleSieve;
@@ -42769,7 +42794,7 @@ if (typeof self === 'object') {
   }
 }
 
-},{"crypto":"2RD6T"}],"2j26C":[function(require,module,exports) {
+},{"crypto":"2RD6T"}],"6zfGX":[function(require,module,exports) {
 module.exports = JSON.parse("{\"modp1\":{\"gen\":\"02\",\"prime\":\"ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a63a3620ffffffffffffffff\"},\"modp2\":{\"gen\":\"02\",\"prime\":\"ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece65381ffffffffffffffff\"},\"modp5\":{\"gen\":\"02\",\"prime\":\"ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c62f356208552bb9ed529077096966d670c354e4abc9804f1746c08ca237327ffffffffffffffff\"},\"modp14\":{\"gen\":\"02\",\"prime\":\"ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c62f356208552bb9ed529077096966d670c354e4abc9804f1746c08ca18217c32905e462e36ce3be39e772c180e86039b2783a2ec07a28fb5c55df06f4c52c9de2bcbf6955817183995497cea956ae515d2261898fa051015728e5a8aacaa68ffffffffffffffff\"},\"modp15\":{\"gen\":\"02\",\"prime\":\"ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c62f356208552bb9ed529077096966d670c354e4abc9804f1746c08ca18217c32905e462e36ce3be39e772c180e86039b2783a2ec07a28fb5c55df06f4c52c9de2bcbf6955817183995497cea956ae515d2261898fa051015728e5a8aaac42dad33170d04507a33a85521abdf1cba64ecfb850458dbef0a8aea71575d060c7db3970f85a6e1e4c7abf5ae8cdb0933d71e8c94e04a25619dcee3d2261ad2ee6bf12ffa06d98a0864d87602733ec86a64521f2b18177b200cbbe117577a615d6c770988c0bad946e208e24fa074e5ab3143db5bfce0fd108e4b82d120a93ad2caffffffffffffffff\"},\"modp16\":{\"gen\":\"02\",\"prime\":\"ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c62f356208552bb9ed529077096966d670c354e4abc9804f1746c08ca18217c32905e462e36ce3be39e772c180e86039b2783a2ec07a28fb5c55df06f4c52c9de2bcbf6955817183995497cea956ae515d2261898fa051015728e5a8aaac42dad33170d04507a33a85521abdf1cba64ecfb850458dbef0a8aea71575d060c7db3970f85a6e1e4c7abf5ae8cdb0933d71e8c94e04a25619dcee3d2261ad2ee6bf12ffa06d98a0864d87602733ec86a64521f2b18177b200cbbe117577a615d6c770988c0bad946e208e24fa074e5ab3143db5bfce0fd108e4b82d120a92108011a723c12a787e6d788719a10bdba5b2699c327186af4e23c1a946834b6150bda2583e9ca2ad44ce8dbbbc2db04de8ef92e8efc141fbecaa6287c59474e6bc05d99b2964fa090c3a2233ba186515be7ed1f612970cee2d7afb81bdd762170481cd0069127d5b05aa993b4ea988d8fddc186ffb7dc90a6c08f4df435c934063199ffffffffffffffff\"},\"modp17\":{\"gen\":\"02\",\"prime\":\"ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c62f356208552bb9ed529077096966d670c354e4abc9804f1746c08ca18217c32905e462e36ce3be39e772c180e86039b2783a2ec07a28fb5c55df06f4c52c9de2bcbf6955817183995497cea956ae515d2261898fa051015728e5a8aaac42dad33170d04507a33a85521abdf1cba64ecfb850458dbef0a8aea71575d060c7db3970f85a6e1e4c7abf5ae8cdb0933d71e8c94e04a25619dcee3d2261ad2ee6bf12ffa06d98a0864d87602733ec86a64521f2b18177b200cbbe117577a615d6c770988c0bad946e208e24fa074e5ab3143db5bfce0fd108e4b82d120a92108011a723c12a787e6d788719a10bdba5b2699c327186af4e23c1a946834b6150bda2583e9ca2ad44ce8dbbbc2db04de8ef92e8efc141fbecaa6287c59474e6bc05d99b2964fa090c3a2233ba186515be7ed1f612970cee2d7afb81bdd762170481cd0069127d5b05aa993b4ea988d8fddc186ffb7dc90a6c08f4df435c93402849236c3fab4d27c7026c1d4dcb2602646dec9751e763dba37bdf8ff9406ad9e530ee5db382f413001aeb06a53ed9027d831179727b0865a8918da3edbebcf9b14ed44ce6cbaced4bb1bdb7f1447e6cc254b332051512bd7af426fb8f401378cd2bf5983ca01c64b92ecf032ea15d1721d03f482d7ce6e74fef6d55e702f46980c82b5a84031900b1c9e59e7c97fbec7e8f323a97a7e36cc88be0f1d45b7ff585ac54bd407b22b4154aacc8f6d7ebf48e1d814cc5ed20f8037e0a79715eef29be32806a1d58bb7c5da76f550aa3d8a1fbff0eb19ccb1a313d55cda56c9ec2ef29632387fe8d76e3c0468043e8f663f4860ee12bf2d5b0b7474d6e694f91e6dcc4024ffffffffffffffff\"},\"modp18\":{\"gen\":\"02\",\"prime\":\"ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c62f356208552bb9ed529077096966d670c354e4abc9804f1746c08ca18217c32905e462e36ce3be39e772c180e86039b2783a2ec07a28fb5c55df06f4c52c9de2bcbf6955817183995497cea956ae515d2261898fa051015728e5a8aaac42dad33170d04507a33a85521abdf1cba64ecfb850458dbef0a8aea71575d060c7db3970f85a6e1e4c7abf5ae8cdb0933d71e8c94e04a25619dcee3d2261ad2ee6bf12ffa06d98a0864d87602733ec86a64521f2b18177b200cbbe117577a615d6c770988c0bad946e208e24fa074e5ab3143db5bfce0fd108e4b82d120a92108011a723c12a787e6d788719a10bdba5b2699c327186af4e23c1a946834b6150bda2583e9ca2ad44ce8dbbbc2db04de8ef92e8efc141fbecaa6287c59474e6bc05d99b2964fa090c3a2233ba186515be7ed1f612970cee2d7afb81bdd762170481cd0069127d5b05aa993b4ea988d8fddc186ffb7dc90a6c08f4df435c93402849236c3fab4d27c7026c1d4dcb2602646dec9751e763dba37bdf8ff9406ad9e530ee5db382f413001aeb06a53ed9027d831179727b0865a8918da3edbebcf9b14ed44ce6cbaced4bb1bdb7f1447e6cc254b332051512bd7af426fb8f401378cd2bf5983ca01c64b92ecf032ea15d1721d03f482d7ce6e74fef6d55e702f46980c82b5a84031900b1c9e59e7c97fbec7e8f323a97a7e36cc88be0f1d45b7ff585ac54bd407b22b4154aacc8f6d7ebf48e1d814cc5ed20f8037e0a79715eef29be32806a1d58bb7c5da76f550aa3d8a1fbff0eb19ccb1a313d55cda56c9ec2ef29632387fe8d76e3c0468043e8f663f4860ee12bf2d5b0b7474d6e694f91e6dbe115974a3926f12fee5e438777cb6a932df8cd8bec4d073b931ba3bc832b68d9dd300741fa7bf8afc47ed2576f6936ba424663aab639c5ae4f5683423b4742bf1c978238f16cbe39d652de3fdb8befc848ad922222e04a4037c0713eb57a81a23f0c73473fc646cea306b4bcbc8862f8385ddfa9d4b7fa2c087e879683303ed5bdd3a062b3cf5b3a278a66d2a13f83f44f82ddf310ee074ab6a364597e899a0255dc164f31cc50846851df9ab48195ded7ea1b1d510bd7ee74d73faf36bc31ecfa268359046f4eb879f924009438b481c6cd7889a002ed5ee382bc9190da6fc026e479558e4475677e9aa9e3050e2765694dfc81f56e880b96e7160c980dd98edd3dfffffffffffffffff\"}}");
 },{}],"2oqT0":[function(require,module,exports) {
 var Buffer = require("buffer").Buffer;
@@ -42996,7 +43021,7 @@ module.exports = {
   createVerify: createVerify
 };
 
-},{"safe-buffer":"3zZ8y","create-hash":"5DGs1","readable-stream":"4pCu3","inherits":"1EUwN","./sign":"1lAOF","./verify":"43D1R","./algorithms.json":"IzM4b"}],"4pCu3":[function(require,module,exports) {
+},{"safe-buffer":"3zZ8y","create-hash":"5DGs1","readable-stream":"4pCu3","inherits":"1EUwN","./sign":"1lAOF","./verify":"43D1R","./algorithms.json":"3wKCN"}],"4pCu3":[function(require,module,exports) {
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -45929,7 +45954,7 @@ module.exports = sign;
 module.exports.getKey = getKey;
 module.exports.makeKey = makeKey;
 
-},{"safe-buffer":"3zZ8y","create-hmac":"1EvLL","browserify-rsa":"1wB3x","elliptic":"V8KOm","bn.js":"HXxAx","parse-asn1":"5C49D","./curves.json":"2XkP8"}],"1wB3x":[function(require,module,exports) {
+},{"safe-buffer":"3zZ8y","create-hmac":"1EvLL","browserify-rsa":"1wB3x","elliptic":"V8KOm","bn.js":"HXxAx","parse-asn1":"5C49D","./curves.json":"6NmVp"}],"1wB3x":[function(require,module,exports) {
 var Buffer = require("buffer").Buffer;
 var BN = require('bn.js');
 var randomBytes = require('randombytes');
@@ -49530,7 +49555,7 @@ elliptic.curves = require('./elliptic/curves');
 elliptic.ec = require('./elliptic/ec');
 elliptic.eddsa = require('./elliptic/eddsa');
 
-},{"../package.json":"2KNqm","./elliptic/utils":"4TuQN","brorand":"IzC4k","./elliptic/curve":"LDYSE","./elliptic/curves":"3l4sR","./elliptic/ec":"42yrQ","./elliptic/eddsa":"2N3MS"}],"2KNqm":[function(require,module,exports) {
+},{"../package.json":"3Q5IS","./elliptic/utils":"4TuQN","brorand":"IzC4k","./elliptic/curve":"LDYSE","./elliptic/curves":"3l4sR","./elliptic/ec":"42yrQ","./elliptic/eddsa":"2N3MS"}],"3Q5IS":[function(require,module,exports) {
 module.exports = JSON.parse("{\"name\":\"elliptic\",\"version\":\"6.5.4\",\"description\":\"EC cryptography\",\"main\":\"lib/elliptic.js\",\"files\":[\"lib\"],\"scripts\":{\"lint\":\"eslint lib test\",\"lint:fix\":\"npm run lint -- --fix\",\"unit\":\"istanbul test _mocha --reporter=spec test/index.js\",\"test\":\"npm run lint && npm run unit\",\"version\":\"grunt dist && git add dist/\"},\"repository\":{\"type\":\"git\",\"url\":\"git@github.com:indutny/elliptic\"},\"keywords\":[\"EC\",\"Elliptic\",\"curve\",\"Cryptography\"],\"author\":\"Fedor Indutny <fedor@indutny.com>\",\"license\":\"MIT\",\"bugs\":{\"url\":\"https://github.com/indutny/elliptic/issues\"},\"homepage\":\"https://github.com/indutny/elliptic\",\"devDependencies\":{\"brfs\":\"^2.0.2\",\"coveralls\":\"^3.1.0\",\"eslint\":\"^7.6.0\",\"grunt\":\"^1.2.1\",\"grunt-browserify\":\"^5.3.0\",\"grunt-cli\":\"^1.3.2\",\"grunt-contrib-connect\":\"^3.0.0\",\"grunt-contrib-copy\":\"^1.0.0\",\"grunt-contrib-uglify\":\"^5.0.0\",\"grunt-mocha-istanbul\":\"^5.0.2\",\"grunt-saucelabs\":\"^9.0.1\",\"istanbul\":\"^0.4.5\",\"mocha\":\"^8.0.1\"},\"dependencies\":{\"bn.js\":\"^4.11.9\",\"brorand\":\"^1.1.0\",\"hash.js\":\"^1.0.0\",\"hmac-drbg\":\"^1.0.1\",\"inherits\":\"^2.0.4\",\"minimalistic-assert\":\"^1.0.1\",\"minimalistic-crypto-utils\":\"^1.0.1\"}}");
 },{}],"4TuQN":[function(require,module,exports) {
 'use strict';
@@ -58373,7 +58398,7 @@ function decrypt(data, password) {
   return Buffer.concat(out);
 }
 
-},{"./asn1":"5uf3L","./aesid.json":"1ik9a","./fixProc":"3CsNb","browserify-aes":"57Atw","pbkdf2":"vWsg6","safe-buffer":"3zZ8y"}],"5uf3L":[function(require,module,exports) {
+},{"./asn1":"5uf3L","./aesid.json":"25yjE","./fixProc":"3CsNb","browserify-aes":"57Atw","pbkdf2":"vWsg6","safe-buffer":"3zZ8y"}],"5uf3L":[function(require,module,exports) {
 // from https://github.com/indutny/self-signed/blob/gh-pages/lib/asn1.js
 // Fedor, you are amazing.
 'use strict'
@@ -63739,7 +63764,7 @@ var X509Certificate = asn.define('X509Certificate', function () {
 
 module.exports = X509Certificate
 
-},{"asn1.js":"7H3i4"}],"1ik9a":[function(require,module,exports) {
+},{"asn1.js":"7H3i4"}],"25yjE":[function(require,module,exports) {
 module.exports = JSON.parse("{\"2.16.840.1.101.3.4.1.1\":\"aes-128-ecb\",\"2.16.840.1.101.3.4.1.2\":\"aes-128-cbc\",\"2.16.840.1.101.3.4.1.3\":\"aes-128-ofb\",\"2.16.840.1.101.3.4.1.4\":\"aes-128-cfb\",\"2.16.840.1.101.3.4.1.21\":\"aes-192-ecb\",\"2.16.840.1.101.3.4.1.22\":\"aes-192-cbc\",\"2.16.840.1.101.3.4.1.23\":\"aes-192-ofb\",\"2.16.840.1.101.3.4.1.24\":\"aes-192-cfb\",\"2.16.840.1.101.3.4.1.41\":\"aes-256-ecb\",\"2.16.840.1.101.3.4.1.42\":\"aes-256-cbc\",\"2.16.840.1.101.3.4.1.43\":\"aes-256-ofb\",\"2.16.840.1.101.3.4.1.44\":\"aes-256-cfb\"}");
 },{}],"3CsNb":[function(require,module,exports) {
 // adapted from https://github.com/apatil/pemstrip
@@ -63774,7 +63799,7 @@ module.exports = function (okey, password) {
   };
 };
 
-},{"evp_bytestokey":"8bbMT","browserify-aes":"57Atw","safe-buffer":"3zZ8y"}],"2XkP8":[function(require,module,exports) {
+},{"evp_bytestokey":"8bbMT","browserify-aes":"57Atw","safe-buffer":"3zZ8y"}],"6NmVp":[function(require,module,exports) {
 module.exports = JSON.parse("{\"1.3.132.0.10\":\"secp256k1\",\"1.3.132.0.33\":\"p224\",\"1.2.840.10045.3.1.1\":\"p192\",\"1.2.840.10045.3.1.7\":\"p256\",\"1.3.132.0.34\":\"p384\",\"1.3.132.0.35\":\"p521\"}");
 },{}],"43D1R":[function(require,module,exports) {
 // much of this based on https://github.com/indutny/self-signed/blob/gh-pages/lib/rsa.js
@@ -63848,7 +63873,7 @@ function checkValue(b, q) {
 }
 module.exports = verify;
 
-},{"safe-buffer":"3zZ8y","bn.js":"HXxAx","elliptic":"V8KOm","parse-asn1":"5C49D","./curves.json":"2XkP8"}],"5a0M1":[function(require,module,exports) {
+},{"safe-buffer":"3zZ8y","bn.js":"HXxAx","elliptic":"V8KOm","parse-asn1":"5C49D","./curves.json":"6NmVp"}],"5a0M1":[function(require,module,exports) {
 var Buffer = require("buffer").Buffer;
 var elliptic = require('elliptic');
 var BN = require('bn.js');
@@ -71360,7 +71385,7 @@ _parcelHelpers.export(exports, "insertNewWorkoutItem", function () {
 function insertNewWorkoutItem(workoutData) {
   const allWorkoutsList = document.querySelector('.all-workouts-list');
   const html = `
-  <div class="workout-item-outbox">
+  <div class="workout-item-outbox workout-${workoutData.type === 'running' ? 'running' : 'cycling'}-item" data-id=${workoutData.id}>
   <div class="workout-item-inbox">
     <h4>${workoutData.type === 'running' ? '🏃‍♂️ Running' : '🚴‍♂️ Cycling'}</h4>
     <p class="workout-info">${workoutData.type === 'running' ? 'Ran' : 'Cycled'} ${workoutData.distance} kms for ${workoutData.duration} mins at ${workoutData.type === 'running' ? workoutData.cadence : workoutData.elevation} ${workoutData.type === 'running' ? 'steps/min' : 'm/min'}</p>

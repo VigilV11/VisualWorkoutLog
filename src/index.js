@@ -12,11 +12,6 @@ import 'regenerator-runtime/runtime';
 import { nanoid } from 'nanoid';
 
 // import {
-//   classPrivateProperties,
-//   classPrivateMethods,
-// } from '@parcel/transformer-js';
-
-// import {
 //   mapAPIMapbox as mapAPI,
 //   mapAttributionMapbox as mapAttribution,
 // } from './constants.js';
@@ -42,6 +37,12 @@ import { insertWorkoutPin } from './insertWorkoutPin.js';
 // ---- MARK: select DOM nodes -----------------------------------------------------------
 
 const allWorkoutsList = document.querySelector('.all-workouts-list');
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                   MARK: DATA MODEL                                   //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
 
 class Workout {
   id = nanoid();
@@ -91,6 +92,7 @@ class Cycling extends Workout {
 class App {
   #allWorkouts = [];
   #map;
+  #mapZoomLevel = 17;
   #coords;
   #mainLocation;
   #marker;
@@ -102,6 +104,10 @@ class App {
     allWorkoutsList.addEventListener('change', this.#toggleElevationField);
     allWorkoutsList.addEventListener('submit', this.#newWorkout.bind(this)); // Binding the 'this' of the instance. Otherwise 'allWorkoutsList' would take the value of 'this'.
     allWorkoutsList.addEventListener('click', this.#cancelForm);
+    allWorkoutsList.addEventListener(
+      'click',
+      this.#panToMapOnItemClick.bind(this)
+    );
   }
 
   async #loadMap() {
@@ -110,7 +116,7 @@ class App {
     const { latitude: lat, longitude: lng } = res.coords;
     this.#coords = { lat, lng };
 
-    this.#map = L.map('map').setView([lat, lng], 13); // second parameter is the map zoom level
+    this.#map = L.map('map').setView([lat, lng], this.#mapZoomLevel); // second parameter is the map zoom level
 
     L.tileLayer(mapAPI, mapAttribution).addTo(this.#map);
 
@@ -291,6 +297,27 @@ class App {
     const res = await fetch(`${locationDataAPI}&lat=${lat}&lon=${lng}`);
     const data = await res.json();
     return data.display_name;
+  }
+
+  // Pan the map to the workout pin location based on the workout item clicked
+  #panToMapOnItemClick(e) {
+    const item = e.target.closest('.workout-item-outbox');
+    // If target is not a workout list item, return
+    if (!item) return;
+
+    const workoutItem = this.#allWorkouts.find(
+      (itemDate) => itemDate.id === item.dataset.id
+    );
+    this.#map.setView(
+      [workoutItem.coords.lat, workoutItem.coords.lng],
+      this.#mapZoomLevel,
+      {
+        animate: true,
+        pan: {
+          duration: 1,
+        },
+      }
+    );
   }
 }
 
