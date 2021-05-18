@@ -7,7 +7,7 @@
 // ---- MARK: imports; -------------------------------------------------------------------
 
 import L, { Marker } from 'leaflet';
-import 'core-js/stable';
+// import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { nanoid } from 'nanoid';
 
@@ -319,6 +319,19 @@ class App {
       }
     );
   }
+
+  reset() {
+    localStorage.removeItem('allWorkouts');
+    location.reload();
+  }
 }
 
 const app = new App();
+
+// Add to .babelrc for Babel < 7
+// {
+//   "plugins": [
+//     "@babel/plugin-proposal-class-properties",
+//     "@babel/plugin-proposal-private-methods"
+//   ]
+// }
